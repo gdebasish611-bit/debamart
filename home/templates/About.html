@@ -1,0 +1,810 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>About - Debamart</title>
+{% endblock title %}
+
+{% block body %}
+
+<style>
+
+/* ================= ABOUT HERO ================= */
+
+.about-hero {
+    padding: 70px 7%;
+    text-align: center;
+    background: linear-gradient(
+        135deg,
+        #dcfce7,
+        #ffffff
+    );
+}
+
+.about-hero small {
+    color: #16a34a;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.about-hero h1 {
+    font-size: 48px;
+    margin: 15px 0;
+}
+
+.about-hero h1 span {
+    color: #16a34a;
+}
+
+.about-hero p {
+    color: #666;
+    font-size: 17px;
+    max-width: 700px;
+    margin: auto;
+    line-height: 1.7;
+}
+
+
+/* ================= ABOUT INTRO ================= */
+
+.about-section {
+    padding: 70px 7%;
+}
+
+.about-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 55px;
+    align-items: center;
+}
+
+
+/* ================= ABOUT IMAGE ================= */
+
+.about-image {
+    min-height: 400px;
+    background: linear-gradient(
+        135deg,
+        #dcfce7,
+        #f0fdf4
+    );
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 150px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+}
+
+
+/* ================= ABOUT CONTENT ================= */
+
+.about-content small {
+    color: #16a34a;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.about-content h2 {
+    font-size: 38px;
+    margin: 12px 0 18px;
+    line-height: 1.2;
+}
+
+.about-content h2 span {
+    color: #16a34a;
+}
+
+.about-content p {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+
+/* ================= BUTTON ================= */
+
+.about-btn {
+    display: inline-block;
+    margin-top: 15px;
+    background: #16a34a;
+    color: white;
+    text-decoration: none;
+    padding: 13px 25px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.about-btn:hover {
+    background: #15803d;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(22,163,74,0.25);
+}
+
+
+/* ================= STATS ================= */
+
+.stats-section {
+    padding: 20px 7% 70px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+}
+
+.stat-card {
+    background: white;
+    padding: 30px 20px;
+    text-align: center;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+    transition: 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}
+
+.stat-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+
+.stat-card h3 {
+    color: #16a34a;
+    font-size: 32px;
+    margin-bottom: 7px;
+}
+
+.stat-card p {
+    color: #777;
+    font-size: 14px;
+}
+
+
+/* ================= MISSION ================= */
+
+.mission-section {
+    padding: 70px 7%;
+    background: #ffffff;
+}
+
+.mission-heading {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.mission-heading small {
+    color: #16a34a;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.mission-heading h2 {
+    font-size: 35px;
+    margin: 12px 0;
+}
+
+.mission-heading h2 span {
+    color: #16a34a;
+}
+
+.mission-heading p {
+    color: #777;
+    max-width: 650px;
+    margin: auto;
+    line-height: 1.7;
+}
+
+
+/* ================= MISSION CARDS ================= */
+
+.mission-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.mission-card {
+    background: #f6f7f9;
+    padding: 35px 25px;
+    text-align: center;
+    border-radius: 18px;
+    transition: 0.3s;
+    border: 1px solid transparent;
+}
+
+.mission-card:hover {
+    transform: translateY(-7px);
+    background: #f0fdf4;
+    border-color: #16a34a;
+}
+
+.mission-icon {
+    font-size: 50px;
+    margin-bottom: 18px;
+}
+
+.mission-card h3 {
+    font-size: 21px;
+    margin-bottom: 12px;
+}
+
+.mission-card p {
+    color: #777;
+    line-height: 1.7;
+    font-size: 14px;
+}
+
+
+/* ================= WHY CHOOSE US ================= */
+
+.why-section {
+    padding: 70px 7%;
+}
+
+.why-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+}
+
+.why-content small {
+    color: #16a34a;
+    font-weight: bold;
+}
+
+.why-content h2 {
+    font-size: 36px;
+    margin: 12px 0 20px;
+}
+
+.why-content h2 span {
+    color: #16a34a;
+}
+
+.why-content > p {
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 25px;
+}
+
+
+/* ================= FEATURES ================= */
+
+.features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.feature {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    transition: 0.3s;
+}
+
+.feature:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.10);
+}
+
+.feature-icon {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.feature h3 {
+    font-size: 17px;
+    margin-bottom: 6px;
+}
+
+.feature p {
+    color: #777;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* ================= WHY IMAGE ================= */
+
+.why-image {
+    min-height: 400px;
+    border-radius: 25px;
+    background: linear-gradient(
+        135deg,
+        #f0fdf4,
+        #dcfce7
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 150px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+}
+
+
+/* ================= CTA ================= */
+
+.cta-section {
+    margin: 10px 7% 70px;
+    padding: 55px 40px;
+    background: linear-gradient(
+        135deg,
+        #16a34a,
+        #15803d
+    );
+    border-radius: 22px;
+    text-align: center;
+    color: white;
+}
+
+.cta-section h2 {
+    font-size: 35px;
+    margin-bottom: 12px;
+}
+
+.cta-section p {
+    color: #dcfce7;
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 650px;
+    margin: auto;
+}
+
+.cta-btn {
+    display: inline-block;
+    margin-top: 25px;
+    background: white;
+    color: #16a34a;
+    padding: 13px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.cta-btn:hover {
+    background: #f0fdf4;
+    transform: translateY(-2px);
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1000px) {
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mission-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 800px) {
+
+    .about-container,
+    .why-container {
+        grid-template-columns: 1fr;
+    }
+
+    .mission-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .about-hero h1 {
+        font-size: 40px;
+    }
+
+    .about-content h2 {
+        font-size: 32px;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .about-hero {
+        padding: 50px 5%;
+    }
+
+    .about-hero h1 {
+        font-size: 34px;
+    }
+
+    .about-section,
+    .why-section,
+    .mission-section {
+        padding: 50px 5%;
+    }
+
+    .about-image,
+    .why-image {
+        min-height: 280px;
+        font-size: 100px;
+    }
+
+    .stats-section {
+        padding: 10px 5% 50px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .features {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-section {
+        margin: 10px 5% 50px;
+        padding: 40px 20px;
+    }
+
+    .cta-section h2 {
+        font-size: 28px;
+    }
+
+}
+
+</style>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="about-hero">
+
+    <small>WELCOME TO DEBAMART</small>
+
+    <h1>
+        About <span>Debamart</span>
+    </h1>
+
+    <p>
+        Your trusted online shopping mart where quality
+        products, great prices and a better shopping
+        experience come together.
+    </p>
+
+</section>
+
+
+<!-- ================= ABOUT INTRO ================= -->
+
+<section class="about-section">
+
+    <div class="about-container">
+
+        <div class="about-image">
+            🛒
+        </div>
+
+
+        <div class="about-content">
+
+            <small>WHO WE ARE</small>
+
+            <h2>
+                Your Everyday
+                <span>Shopping Partner</span>
+            </h2>
+
+            <p>
+                Welcome to Debamart, your online shopping
+                destination for everyday products and
+                essentials.
+            </p>
+
+            <p>
+                We bring different categories together in
+                one simple and convenient place, making it
+                easier for you to discover products you love.
+            </p>
+
+            <p>
+                From fashion and electronics to groceries,
+                home products and accessories, Debamart is
+                designed to make online shopping simple,
+                convenient and enjoyable.
+            </p>
+
+            <a href="/products/" class="about-btn">
+                Explore Products →
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= STATS ================= -->
+
+<section class="stats-section">
+
+    <div class="stats">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🛍️
+            </div>
+
+            <h3>500+</h3>
+
+            <p>
+                Products
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                😊
+            </div>
+
+            <h3>100+</h3>
+
+            <p>
+                Happy Customers
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📦
+            </div>
+
+            <h3>1000+</h3>
+
+            <p>
+                Orders Delivered
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                ⭐
+            </div>
+
+            <h3>4.8</h3>
+
+            <p>
+                Customer Rating
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= MISSION ================= -->
+
+<section class="mission-section">
+
+    <div class="mission-heading">
+
+        <small>OUR VALUES</small>
+
+        <h2>
+            What Makes <span>Debamart</span> Special?
+        </h2>
+
+        <p>
+            We focus on creating a simple and enjoyable
+            shopping experience for every customer.
+        </p>
+
+    </div>
+
+
+    <div class="mission-cards">
+
+        <div class="mission-card">
+
+            <div class="mission-icon">
+                🎯
+            </div>
+
+            <h3>
+                Our Mission
+            </h3>
+
+            <p>
+                To make quality products accessible and
+                online shopping simple for everyone.
+            </p>
+
+        </div>
+
+
+        <div class="mission-card">
+
+            <div class="mission-icon">
+                💚
+            </div>
+
+            <h3>
+                Our Vision
+            </h3>
+
+            <p>
+                To build a trusted shopping platform that
+                customers can rely on every day.
+            </p>
+
+        </div>
+
+
+        <div class="mission-card">
+
+            <div class="mission-icon">
+                🤝
+            </div>
+
+            <h3>
+                Our Promise
+            </h3>
+
+            <p>
+                We aim to provide quality products, fair
+                prices and a better customer experience.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= WHY CHOOSE US ================= -->
+
+<section class="why-section">
+
+    <div class="why-container">
+
+        <div class="why-content">
+
+            <small>WHY CHOOSE US</small>
+
+            <h2>
+                Shopping Made
+                <span>Simple</span>
+            </h2>
+
+            <p>
+                At Debamart, we want your shopping experience
+                to be easy, convenient and enjoyable.
+            </p>
+
+
+            <div class="features">
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        🛒
+                    </div>
+
+                    <h3>
+                        Wide Selection
+                    </h3>
+
+                    <p>
+                        Explore products from many
+                        different categories.
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        💰
+                    </div>
+
+                    <h3>
+                        Great Prices
+                    </h3>
+
+                    <p>
+                        Find useful products at
+                        attractive prices.
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        🚚
+                    </div>
+
+                    <h3>
+                        Easy Shopping
+                    </h3>
+
+                    <p>
+                        Browse and discover products
+                        with a simple experience.
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ⭐
+                    </div>
+
+                    <h3>
+                        Quality Focus
+                    </h3>
+
+                    <p>
+                        We aim to provide products
+                        customers can trust.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="why-image">
+            😊
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CTA ================= -->
+
+<section class="cta-section">
+
+    <h2>
+        Ready to Start Shopping?
+    </h2>
+
+    <p>
+        Explore our products and discover something
+        special for yourself today.
+    </p>
+
+    <a href="/products/" class="cta-btn">
+        Shop Now →
+    </a>
+
+</section>
+
+{% endblock body %}

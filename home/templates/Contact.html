@@ -1,0 +1,618 @@
+```html
+{% extends "base.html" %}
+
+{% block title %}
+<title>Contact - Debamart</title>
+{% endblock title %}
+
+{% block body %}
+
+<style>
+
+    /* ================= CONTACT HERO ================= */
+
+    .contact-hero {
+        min-height: 400px;
+        padding: 65px 7%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(135deg, #dcfce7, #ffffff);
+    }
+
+    .hero-text {
+        max-width: 560px;
+    }
+
+    .hero-text small {
+        color: #16a34a;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .hero-text h1 {
+        font-size: 50px;
+        line-height: 1.1;
+        margin: 15px 0;
+    }
+
+    .hero-text h1 span {
+        color: #16a34a;
+    }
+
+    .hero-text p {
+        color: #666;
+        font-size: 18px;
+        line-height: 1.7;
+        margin-top: 15px;
+    }
+
+    .green-line {
+        width: 75px;
+        height: 4px;
+        background: #16a34a;
+        margin: 20px 0;
+    }
+
+    .hero-image {
+        width: 43%;
+        height: 320px;
+        border-radius: 25px;
+        background: linear-gradient(135deg, #bbf7d0, #86efac);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 120px;
+    }
+
+
+    /* ================= CONTACT SECTION ================= */
+
+    .contact-section {
+        padding: 65px 7%;
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 25px;
+    }
+
+    .contact-box {
+        background: white;
+        padding: 35px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        transition: 0.3s ease;
+    }
+
+    .contact-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+    }
+
+    .contact-box h2 {
+        font-size: 30px;
+        margin-bottom: 8px;
+    }
+
+    .heading-line {
+        width: 45px;
+        height: 4px;
+        background: #16a34a;
+        margin-bottom: 28px;
+    }
+
+
+    /* ================= FORM ================= */
+
+    .form-row {
+        display: flex;
+        gap: 15px;
+    }
+
+    .input-group {
+        width: 100%;
+        margin-bottom: 18px;
+    }
+
+    .input-group input,
+    .input-group textarea {
+        width: 100%;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        outline: none;
+        font-size: 15px;
+        background: #ffffff;
+        transition: 0.3s ease;
+    }
+
+    .input-group input:hover,
+    .input-group textarea:hover {
+        border-color: #16a34a;
+        box-shadow: 0 4px 12px rgba(22, 163, 74, 0.12);
+        transform: translateY(-2px);
+    }
+
+    .input-group input:focus,
+    .input-group textarea:focus {
+        border-color: #16a34a;
+        box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+    }
+
+    .input-group textarea {
+        height: 140px;
+        resize: none;
+    }
+
+    .send-btn {
+        width: 100%;
+        border: none;
+        background: #16a34a;
+        color: white;
+        padding: 14px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s ease;
+    }
+
+    .send-btn:hover {
+        background: #15803d;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 18px rgba(22, 163, 74, 0.25);
+    }
+
+    .send-btn:active {
+        transform: translateY(0);
+    }
+
+
+    /* ================= CONTACT INFORMATION ================= */
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 18px 0;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+    .info-icon {
+        min-width: 48px;
+        height: 48px;
+        background: #dcfce7;
+        color: #16a34a;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+    }
+
+    .info-text h4 {
+        margin-bottom: 5px;
+        font-size: 16px;
+    }
+
+    .info-text p {
+        font-size: 14px;
+        color: #666;
+        line-height: 1.5;
+    }
+
+
+    /* ================= FEATURES ================= */
+
+    .features-section {
+        padding: 10px 7% 65px;
+    }
+
+    .features-title {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .features-title h2 {
+        font-size: 34px;
+        margin-bottom: 8px;
+    }
+
+    .features-title p {
+        color: #777;
+    }
+
+    .features {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 22px;
+    }
+
+    .feature {
+        background: white;
+        padding: 30px 20px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        transition: 0.3s;
+    }
+
+    .feature:hover {
+        transform: translateY(-7px);
+    }
+
+    .feature-icon {
+        font-size: 45px;
+        margin-bottom: 15px;
+    }
+
+    .feature h3 {
+        margin-bottom: 8px;
+    }
+
+    .feature p {
+        color: #777;
+        line-height: 1.5;
+    }
+
+
+    /* ================= RESPONSIVE ================= */
+
+    @media (max-width: 900px) {
+
+        .contact-hero {
+            flex-direction: column;
+            text-align: center;
+            gap: 40px;
+        }
+
+        .hero-text {
+            max-width: 700px;
+        }
+
+        .green-line {
+            margin: 20px auto;
+        }
+
+        .hero-image {
+            width: 100%;
+        }
+
+        .contact-section {
+            grid-template-columns: 1fr;
+        }
+
+        .features {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+
+    @media (max-width: 600px) {
+
+        .contact-hero {
+            padding: 50px 5%;
+        }
+
+        .hero-text h1 {
+            font-size: 35px;
+        }
+
+        .hero-image {
+            height: 250px;
+            font-size: 80px;
+        }
+
+        .contact-section {
+            padding: 45px 5%;
+        }
+
+        .form-row {
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .features-section {
+            padding: 10px 5% 45px;
+        }
+
+        .features {
+            grid-template-columns: 1fr;
+        }
+    }
+
+</style>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="contact-hero">
+
+    <div class="hero-text">
+
+        <small>CONTACT DEBAMART</small>
+
+        <h1>
+            We'd Love to Hear
+            From <span>You!</span>
+        </h1>
+
+        <div class="green-line"></div>
+
+        <p>
+            Have a question, suggestion, or just want to say hello?
+            The team at Debamart is here to help.
+        </p>
+
+    </div>
+
+
+    <div class="hero-image">
+        💬
+    </div>
+
+</section>
+
+
+<!-- ================= CONTACT SECTION ================= -->
+
+<section class="contact-section">
+
+
+    <!-- SEND MESSAGE -->
+
+    <div class="contact-box">
+
+        <h2>Send Us a Message</h2>
+
+        <div class="heading-line"></div>
+
+
+        <form method="post" action="/contact/">
+
+            {% csrf_token %}
+
+
+            <div class="form-row">
+
+                <div class="input-group">
+
+                    <input
+                        type="text"
+                        name="Name"
+                        placeholder="Your Name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <input
+                        type="email"
+                        name="Email"
+                        placeholder="Your Email"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="input-group">
+
+                <input
+                    type="text"
+                    name="Phone"
+                    placeholder="Phone"
+                    required
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <textarea
+                    name="Message"
+                    placeholder="Your Message"
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <button type="submit" class="send-btn">
+                ✈ Send Message
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- CONTACT INFORMATION -->
+
+    <div class="contact-box">
+
+        <h2>Contact Information</h2>
+
+        <div class="heading-line"></div>
+
+
+        <div class="info-item">
+
+            <div class="info-icon">
+                ☎
+            </div>
+
+            <div class="info-text">
+
+                <h4>Phone</h4>
+
+                <p>
+                    +91 70082 68335
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <div class="info-icon">
+                ✉
+            </div>
+
+            <div class="info-text">
+
+                <h4>Email</h4>
+
+                <p>
+                    gdebasish611@.com
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <div class="info-icon">
+                📍
+            </div>
+
+            <div class="info-text">
+
+                <h4>Address</h4>
+
+                <p>
+                    Debamart Pvt. Ltd.<br>
+                    Bhubaneswar, Odisha, India
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <div class="info-icon">
+                🕐
+            </div>
+
+            <div class="info-text">
+
+                <h4>Working Hours</h4>
+
+                <p>
+                    Mon - Sat: 9:00 AM - 9:00 PM<br>
+                    Sun: 10:00 AM - 6:00 PM
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FEATURES ================= -->
+
+<section class="features-section">
+
+    <div class="features-title">
+
+        <h2>
+            Why Choose Debamart?
+        </h2>
+
+        <p>
+            Shopping made simple and reliable
+        </p>
+
+    </div>
+
+
+    <div class="features">
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                🚚
+            </div>
+
+            <h3>
+                Fast Delivery
+            </h3>
+
+            <p>
+                Get your products delivered quickly.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                💰
+            </div>
+
+            <h3>
+                Best Prices
+            </h3>
+
+            <p>
+                Great products at affordable prices.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                🔒
+            </div>
+
+            <h3>
+                Secure Shopping
+            </h3>
+
+            <p>
+                Your shopping experience is safe and secure.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                🎧
+            </div>
+
+            <h3>
+                Customer Support
+            </h3>
+
+            <p>
+                We are always here to help you.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock body %}
+```

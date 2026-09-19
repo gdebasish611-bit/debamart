@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+
+{% block title %}Payment - Debamart{% endblock %}
+
+{% block body %}
+
+<style>
+
+    .payment-page {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+
+    .payment-title {
+        text-align: center;
+        color: #16a34a;
+        margin-bottom: 30px;
+    }
+
+    .payment-box {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.10);
+    }
+
+    .payment-box h2 {
+        margin-bottom: 20px;
+        color: #222;
+    }
+
+    .payment-option {
+        display: block;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        padding: 18px;
+        margin: 12px 0;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .payment-option:hover {
+        border-color: #16a34a;
+        background: #f0fdf4;
+    }
+
+    .payment-option input {
+        margin-right: 10px;
+    }
+
+    .order-total {
+        margin-top: 25px;
+        padding: 18px;
+        background: #f0fdf4;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .pay-btn {
+        width: 100%;
+        margin-top: 25px;
+        padding: 15px;
+        border: none;
+        border-radius: 10px;
+        background: #16a34a;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .pay-btn:hover {
+        background: #15803d;
+    }
+
+    .error-box {
+        background: #fee2e2;
+        color: #b91c1c;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .order-info {
+        background: #f8fafc;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .order-info p {
+        margin: 6px 0;
+        color: #444;
+    }
+
+</style>
+
+
+<div class="payment-page">
+
+    <h1 class="payment-title">
+        💳 Payment
+    </h1>
+
+
+    <div class="payment-box">
+
+        <h2>
+            Select Payment Method
+        </h2>
+
+
+        {% if error %}
+
+        <div class="error-box">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <!-- ORDER INFORMATION -->
+
+        <div class="order-info">
+
+            <p>
+                <strong>Order ID:</strong>
+                #{{ order.id }}
+            </p>
+
+            <p>
+                <strong>Customer:</strong>
+                {{ order.name }}
+            </p>
+
+            <p>
+                <strong>City:</strong>
+                {{ order.city }}
+            </p>
+
+        </div>
+
+
+        <!-- PAYMENT FORM -->
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <!-- CASH ON DELIVERY -->
+
+            <label class="payment-option">
+
+                <input
+                    type="radio"
+                    name="payment_method"
+                    value="Cash on Delivery"
+                    checked
+                >
+
+                💵 Cash on Delivery
+
+            </label>
+
+
+            <!-- UPI -->
+
+            <label class="payment-option">
+
+                <input
+                    type="radio"
+                    name="payment_method"
+                    value="UPI"
+                >
+
+                📱 UPI
+
+            </label>
+
+
+            <!-- CARD -->
+
+            <label class="payment-option">
+
+                <input
+                    type="radio"
+                    name="payment_method"
+                    value="Debit / Credit Card"
+                >
+
+                💳 Debit / Credit Card
+
+            </label>
+
+
+            <!-- TOTAL -->
+
+            <div class="order-total">
+
+                <span>
+                    Total Amount
+                </span>
+
+                <span>
+                    ₹{{ total }}
+                </span>
+
+            </div>
+
+
+            <!-- PLACE ORDER -->
+
+            <button
+                type="submit"
+                class="pay-btn"
+            >
+
+                ✅ Place Order
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

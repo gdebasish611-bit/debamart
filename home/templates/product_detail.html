@@ -1,0 +1,563 @@
+{% extends "base.html" %}
+
+{% block title %}Products - Debamart{% endblock %}
+
+{% block body %}
+
+<style>
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .products-page {
+        padding: 40px 6%;
+        background: #f7fff9;
+        min-height: 80vh;
+    }
+
+    .products-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .products-header h1 {
+        color: #198754;
+        font-size: 36px;
+        margin-bottom: 8px;
+    }
+
+    .products-header p {
+        color: #666;
+        font-size: 16px;
+    }
+
+    /* Search & Filter */
+    .filter-box {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        margin-bottom: 35px;
+    }
+
+    .filter-form {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .search-input {
+        flex: 1;
+        min-width: 220px;
+        padding: 13px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 15px;
+        outline: none;
+    }
+
+    .search-input:focus {
+        border-color: #198754;
+    }
+
+    .category-select {
+        padding: 13px 15px;
+        min-width: 190px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 15px;
+        background: white;
+        outline: none;
+    }
+
+    .category-select:focus {
+        border-color: #198754;
+    }
+
+    .filter-btn {
+        padding: 13px 25px;
+        background: #198754;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .filter-btn:hover {
+        background: #146c43;
+    }
+
+    /* Product Grid */
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 25px;
+    }
+
+    .product-card {
+        background: white;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        transition: 0.3s;
+        border: 1px solid #eeeeee;
+    }
+
+    .product-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+
+    .product-image-box {
+        width: 100%;
+        height: 220px;
+        background: #f4faf6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .product-image-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 15px;
+        transition: 0.3s;
+    }
+
+    .product-card:hover .product-image-box img {
+        transform: scale(1.05);
+    }
+
+    .no-image {
+        color: #999;
+        font-size: 14px;
+    }
+
+    .product-info {
+        padding: 18px;
+    }
+
+    .product-category {
+        color: #198754;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 7px;
+    }
+
+    .product-name {
+        color: #222;
+        font-size: 20px;
+        margin: 0 0 8px;
+    }
+
+    .product-description {
+        color: #777;
+        font-size: 14px;
+        line-height: 1.5;
+        height: 42px;
+        overflow: hidden;
+        margin-bottom: 12px;
+    }
+
+    .product-price {
+        color: #198754;
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    /* Stock */
+    .product-stock {
+        font-size: 13px;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .in-stock {
+        color: #198754;
+    }
+
+    .low-stock {
+        color: #fd7e14;
+    }
+
+    .out-stock {
+        color: #dc3545;
+    }
+
+    /* Buttons */
+    .product-buttons {
+        display: flex;
+        gap: 8px;
+        flex-direction: column;
+    }
+
+    /* View Details */
+    .view-details-btn {
+        display: block;
+        width: 100%;
+        padding: 11px;
+        background: white;
+        color: #198754;
+        border: 2px solid #198754;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .view-details-btn:hover {
+        background: #198754;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    /* Add Cart */
+    .add-cart-btn {
+        display: block;
+        width: 100%;
+        padding: 11px;
+        background: #198754;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .add-cart-btn:hover {
+        background: #146c43;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    /* Disabled Button */
+    .disabled-btn {
+        display: block;
+        width: 100%;
+        padding: 11px;
+        background: #dddddd;
+        color: #777;
+        text-align: center;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: not-allowed;
+    }
+
+    /* Empty */
+    .empty-products {
+        text-align: center;
+        background: white;
+        padding: 60px 20px;
+        border-radius: 14px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    .empty-products h2 {
+        color: #198754;
+        margin-bottom: 10px;
+    }
+
+    .empty-products p {
+        color: #777;
+    }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+        .products-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 800px) {
+        .products-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .products-header h1 {
+            font-size: 30px;
+        }
+    }
+
+    @media (max-width: 550px) {
+        .products-page {
+            padding: 25px 4%;
+        }
+
+        .products-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-form {
+            flex-direction: column;
+        }
+
+        .search-input,
+        .category-select,
+        .filter-btn {
+            width: 100%;
+        }
+    }
+
+</style>
+
+
+<div class="products-page">
+
+    <!-- Header -->
+    <div class="products-header">
+
+        <h1>🛒 Our Products</h1>
+
+        <p>
+            Fresh and quality products at the best prices
+        </p>
+
+    </div>
+
+
+    <!-- Search & Category Filter -->
+    <div class="filter-box">
+
+        <form
+            method="GET"
+            action="{% url 'products' %}"
+            class="filter-form"
+        >
+
+            <input
+                type="text"
+                name="search"
+                class="search-input"
+                placeholder="🔍 Search products..."
+                value="{{ search|default:'' }}"
+            >
+
+
+            <select
+                name="category"
+                class="category-select"
+            >
+
+                <option value="">
+                    All Categories
+                </option>
+
+                {% for cat in categories %}
+
+                    <option
+                        value="{{ cat.name }}"
+                        {% if selected_category == cat.name %}
+                            selected
+                        {% endif %}
+                    >
+
+                        {{ cat.name }}
+
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+
+            <button
+                type="submit"
+                class="filter-btn"
+            >
+                Search
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- Products -->
+
+    {% if products %}
+
+        <div class="products-grid">
+
+            {% for product in products %}
+
+                <div class="product-card">
+
+
+                    <!-- Product Image -->
+
+                    <div class="product-image-box">
+
+                        {% if product.image %}
+
+                            <img
+                                src="{{ product.image.url }}"
+                                alt="{{ product.name }}"
+                            >
+
+                        {% else %}
+
+                            <span class="no-image">
+                                No Image Available
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Product Information -->
+
+                    <div class="product-info">
+
+
+                        <!-- Category -->
+
+                        <div class="product-category">
+
+                            {{ product.category.name }}
+
+                        </div>
+
+
+                        <!-- Product Name -->
+
+                        <h2 class="product-name">
+
+                            {{ product.name }}
+
+                        </h2>
+
+
+                        <!-- Description -->
+
+                        <p class="product-description">
+
+                            {{ product.description }}
+
+                        </p>
+
+
+                        <!-- Price -->
+
+                        <div class="product-price">
+
+                            ₹{{ product.price }}
+
+                        </div>
+
+
+                        <!-- Stock Status -->
+
+                        {% if product.stock > 10 %}
+
+                            <div class="product-stock in-stock">
+
+                                🟢 In Stock
+                                ({{ product.stock }} available)
+
+                            </div>
+
+
+                        {% elif product.stock > 0 %}
+
+                            <div class="product-stock low-stock">
+
+                                🟡 Only {{ product.stock }} left
+
+                            </div>
+
+
+                        {% else %}
+
+                            <div class="product-stock out-stock">
+
+                                🔴 Out of Stock
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- Buttons -->
+
+                        <div class="product-buttons">
+
+
+                            <!-- View Details -->
+
+                            <a
+                                href="{% url 'product_detail' product.id %}"
+                                class="view-details-btn"
+                            >
+
+                                👁 View Details
+
+                            </a>
+
+
+                            <!-- Add To Cart -->
+
+                            {% if product.stock > 0 %}
+
+                                <a
+                                    href="{% url 'add_to_cart' product.id %}"
+                                    class="add-cart-btn"
+                                >
+
+                                    🛒 Add to Cart
+
+                                </a>
+
+                            {% else %}
+
+                                <div class="disabled-btn">
+
+                                    🚫 Out of Stock
+
+                                </div>
+
+                            {% endif %}
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+
+        <!-- No Products -->
+
+        <div class="empty-products">
+
+            <h2>
+                😔 No Products Found
+            </h2>
+
+            <p>
+                Sorry, we couldn't find any product matching your search.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

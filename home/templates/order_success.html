@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}
+Order Successful - Debamart
+{% endblock %}
+
+{% block body %}
+
+<style>
+
+.success-container {
+    max-width: 700px;
+    margin: 60px auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.success-box {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.10);
+}
+
+.success-icon {
+    font-size: 60px;
+    margin-bottom: 15px;
+}
+
+.success-title {
+    color: #198754;
+    margin-bottom: 10px;
+}
+
+.success-message {
+    color: #555;
+    font-size: 17px;
+}
+
+.order-number {
+    margin: 25px 0;
+    padding: 15px;
+    background: #f1f8f4;
+    border-radius: 8px;
+    color: #198754;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.order-total {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.home-btn {
+    display: inline-block;
+    padding: 12px 25px;
+    background: #198754;
+    color: white;
+    text-decoration: none;
+    border-radius: 7px;
+    font-weight: bold;
+}
+
+.home-btn:hover {
+    background: #146c43;
+}
+
+.products-btn {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 12px 25px;
+    background: white;
+    color: #198754;
+    text-decoration: none;
+    border: 1px solid #198754;
+    border-radius: 7px;
+    font-weight: bold;
+}
+
+.products-btn:hover {
+    background: #198754;
+    color: white;
+}
+
+</style>
+
+
+<div class="success-container">
+
+    <div class="success-box">
+
+        <div class="success-icon">
+            🎉
+        </div>
+
+        <h1 class="success-title">
+            Order Placed Successfully!
+        </h1>
+
+        <p class="success-message">
+            Thank you for shopping with Debamart.
+        </p>
+
+        <div class="order-number">
+            Order Number: #{{ order.id }}
+        </div>
+
+        <div class="order-total">
+            Total Amount: ₹{{ order.total }}
+        </div>
+
+        <p>
+            Your order status is:
+            <strong>{{ order.status }}</strong>
+        </p>
+
+        <br>
+
+        <a
+            href="{% url 'home' %}"
+            class="home-btn"
+        >
+            🏠 Go Home
+        </a>
+
+        <a
+            href="{% url 'products' %}"
+            class="products-btn"
+        >
+            🛒 Continue Shopping
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

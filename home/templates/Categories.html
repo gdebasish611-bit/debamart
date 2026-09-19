@@ -1,0 +1,487 @@
+{% extends "base.html" %}
+
+{% block title %}Categories - Debamart{% endblock title %}
+
+{% block body %}
+
+<style>
+
+    .category-hero {
+        padding: 70px 7%;
+        text-align: center;
+        background: linear-gradient(135deg, #dcfce7, #ffffff);
+    }
+
+    .category-hero small {
+        color: #16a34a;
+        font-size: 16px;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    .category-hero h1 {
+        font-size: 48px;
+        margin: 15px 0;
+    }
+
+    .category-hero h1 span {
+        color: #16a34a;
+    }
+
+    .category-hero p {
+        color: #666;
+        font-size: 17px;
+        max-width: 650px;
+        margin: auto;
+        line-height: 1.7;
+    }
+
+
+    /* CATEGORY SECTION */
+
+    .category-section {
+        padding: 60px 7% 80px;
+    }
+
+    .section-heading {
+        text-align: center;
+        margin-bottom: 45px;
+    }
+
+    .section-heading h2 {
+        font-size: 34px;
+        margin-bottom: 10px;
+    }
+
+    .section-heading h2 span {
+        color: #16a34a;
+    }
+
+    .section-heading p {
+        color: #777;
+        font-size: 16px;
+    }
+
+
+    /* CATEGORY GRID */
+
+    .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+    }
+
+
+    /* CATEGORY CARD */
+
+    .category-card {
+        background: white;
+        border-radius: 18px;
+        padding: 35px 25px;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+        transition: 0.3s;
+        border: 1px solid transparent;
+    }
+
+    .category-card:hover {
+        transform: translateY(-8px);
+        border-color: #16a34a;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    }
+
+
+    /* CATEGORY ICON */
+
+    .category-icon {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 20px;
+        background: #f0fdf4;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 50px;
+        transition: 0.3s;
+    }
+
+    .category-card:hover .category-icon {
+        background: #dcfce7;
+        transform: scale(1.08);
+    }
+
+
+    /* CATEGORY CONTENT */
+
+    .category-card h3 {
+        font-size: 21px;
+        margin-bottom: 10px;
+    }
+
+    .category-card p {
+        color: #777;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 18px;
+    }
+
+
+    /* EXPLORE BUTTON */
+
+    .explore-btn {
+        display: inline-block;
+        text-decoration: none;
+        color: #16a34a;
+        border: 1px solid #16a34a;
+        padding: 9px 20px;
+        border-radius: 22px;
+        font-size: 14px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .explore-btn:hover {
+        background: #16a34a;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+
+    /* BANNER */
+
+    .category-banner {
+        margin: 10px 7% 70px;
+        padding: 45px;
+        background: linear-gradient(135deg, #16a34a, #15803d);
+        border-radius: 20px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px;
+    }
+
+    .banner-content h2 {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    .banner-content p {
+        color: #dcfce7;
+        line-height: 1.6;
+    }
+
+    .banner-btn {
+        display: inline-block;
+        margin-top: 20px;
+        background: white;
+        color: #16a34a;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .banner-btn:hover {
+        background: #f0fdf4;
+        transform: translateY(-2px);
+    }
+
+    .banner-icon {
+        font-size: 85px;
+    }
+
+
+    /* RESPONSIVE */
+
+    @media (max-width: 1000px) {
+
+        .categories-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+    }
+
+
+    @media (max-width: 800px) {
+
+        .category-hero h1 {
+            font-size: 40px;
+        }
+
+        .category-banner {
+            flex-direction: column;
+            text-align: center;
+        }
+
+    }
+
+
+    @media (max-width: 600px) {
+
+        .category-hero {
+            padding: 50px 5%;
+        }
+
+        .category-hero h1 {
+            font-size: 34px;
+        }
+
+        .category-section {
+            padding: 45px 5%;
+        }
+
+        .categories-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .category-banner {
+            margin: 10px 5% 50px;
+            padding: 30px 20px;
+        }
+
+    }
+
+</style>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="category-hero">
+
+    <small>DEBAMART STORE</small>
+
+    <h1>
+        Shop By
+        <span>Categories</span>
+    </h1>
+
+    <p>
+        Explore our categories and discover
+        quality products at amazing prices.
+    </p>
+
+</section>
+
+
+<!-- ================= CATEGORIES ================= -->
+
+<section class="category-section">
+
+    <div class="section-heading">
+
+        <h2>
+            🛍️ Explore Our
+            <span>Categories</span>
+        </h2>
+
+        <p>
+            Choose a category to see its products
+        </p>
+
+    </div>
+
+
+    <div class="categories-grid">
+
+
+        <!-- CATEGORY 1 -->
+
+        <div class="category-card">
+
+            <div class="category-icon">
+                🥦
+            </div>
+
+            <h3>
+                Fruits & Vegetables
+            </h3>
+
+            <p>
+                Fresh fruits, vegetables and
+                healthy daily essentials.
+            </p>
+
+            <a
+                href="/products/?category=Fruits%20%26%20Vegetables"
+                class="explore-btn"
+            >
+                Explore →
+            </a>
+
+        </div>
+
+
+        <!-- CATEGORY 2 -->
+
+        <div class="category-card">
+
+            <div class="category-icon">
+                🛒
+            </div>
+
+            <h3>
+                Grocery
+            </h3>
+
+            <p>
+                Daily grocery essentials and
+                useful household products.
+            </p>
+
+            <a
+                href="/products/?category=Grocery"
+                class="explore-btn"
+            >
+                Explore →
+            </a>
+
+        </div>
+
+
+        <!-- CATEGORY 3 -->
+
+        <div class="category-card">
+
+            <div class="category-icon">
+                🥛
+            </div>
+
+            <h3>
+                Dairy
+            </h3>
+
+            <p>
+                Fresh milk and quality dairy
+                products for everyday needs.
+            </p>
+
+            <a
+                href="/products/?category=Dairy"
+                class="explore-btn"
+            >
+                Explore →
+            </a>
+
+        </div>
+
+
+        <!-- CATEGORY 4 -->
+
+        <div class="category-card">
+
+            <div class="category-icon">
+                🍪
+            </div>
+
+            <h3>
+                Snacks
+            </h3>
+
+            <p>
+                Tasty biscuits, snacks and
+                delicious food products.
+            </p>
+
+            <a
+                href="/products/?category=Snacks"
+                class="explore-btn"
+            >
+                Explore →
+            </a>
+
+        </div>
+
+
+        <!-- CATEGORY 5 -->
+
+        <div class="category-card">
+
+            <div class="category-icon">
+                🥤
+            </div>
+
+            <h3>
+                Beverages
+            </h3>
+
+            <p>
+                Refreshing drinks and beverages
+                for every occasion.
+            </p>
+
+            <a
+                href="/products/?category=Beverages"
+                class="explore-btn"
+            >
+                Explore →
+            </a>
+
+        </div>
+
+
+        <!-- CATEGORY 6 -->
+
+        <div class="category-card">
+
+            <div class="category-icon">
+                🧴
+            </div>
+
+            <h3>
+                Personal Care
+            </h3>
+
+            <p>
+                Everyday personal care and
+                grooming essentials.
+            </p>
+
+            <a
+                href="/products/?category=Personal%20Care"
+                class="explore-btn"
+            >
+                Explore →
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- ================= BANNER ================= -->
+
+<section class="category-banner">
+
+    <div class="banner-content">
+
+        <h2>
+            🎉 Great Deals Are Waiting!
+        </h2>
+
+        <p>
+            Discover amazing products from all
+            categories at special prices.
+        </p>
+
+        <a
+            href="/products/"
+            class="banner-btn"
+        >
+            Shop All Products →
+        </a>
+
+    </div>
+
+    <div class="banner-icon">
+        🛒
+    </div>
+
+</section>
+
+{% endblock body %}

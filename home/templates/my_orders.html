@@ -1,0 +1,561 @@
+{% extends "base.html" %}
+
+{% block title %}My Orders - Debamart{% endblock %}
+
+{% block body %}
+
+<style>
+
+.orders-page {
+    max-width: 1100px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+.orders-title {
+    text-align: center;
+    color: #16a34a;
+    margin-bottom: 35px;
+}
+
+.order-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.10);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 20px;
+}
+
+.order-id {
+    font-size: 20px;
+    font-weight: bold;
+    color: #222;
+}
+
+.order-date {
+    color: #666;
+    font-size: 14px;
+}
+
+.order-info {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.info-box {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.info-label {
+    display: block;
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.info-value {
+    font-weight: bold;
+    color: #222;
+}
+
+.payment {
+    color: #16a34a;
+}
+
+.status {
+    color: #16a34a;
+}
+
+
+/* =========================
+   ORDER TRACKING
+   ========================= */
+
+.tracking {
+    margin-top: 25px;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 12px;
+}
+
+.tracking-title {
+    font-size: 17px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 25px;
+}
+
+.tracking-steps {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+.tracking-steps::before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    left: 8%;
+    right: 8%;
+    height: 4px;
+    background: #d1d5db;
+    z-index: 0;
+}
+
+.step {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    width: 25%;
+}
+
+.step-circle {
+    width: 36px;
+    height: 36px;
+    margin: 0 auto 8px;
+    border-radius: 50%;
+    background: #d1d5db;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.step-text {
+    font-size: 13px;
+    color: #666;
+}
+
+.step.active .step-circle {
+    background: #16a34a;
+}
+
+.step.active .step-text {
+    color: #16a34a;
+    font-weight: bold;
+}
+
+
+/* CANCELLED */
+
+.cancelled {
+    text-align: center;
+    padding: 15px;
+    background: #fee2e2;
+    color: #b91c1c;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+
+/* ORDER FOOTER */
+
+.order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.total {
+    font-size: 20px;
+    font-weight: bold;
+    color: #16a34a;
+}
+
+.details-btn {
+    background: #16a34a;
+    color: white;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.details-btn:hover {
+    background: #15803d;
+}
+
+
+/* NO ORDERS */
+
+.no-orders {
+    background: white;
+    text-align: center;
+    padding: 50px 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.10);
+}
+
+.no-orders h2 {
+    color: #222;
+    margin-bottom: 10px;
+}
+
+.no-orders p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.shop-btn {
+    display: inline-block;
+    background: #16a34a;
+    color: white;
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.shop-btn:hover {
+    background: #15803d;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+    .order-info {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 550px) {
+
+    .orders-page {
+        margin: 30px auto;
+        padding: 15px;
+    }
+
+    .order-card {
+        padding: 18px;
+    }
+
+    .order-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .order-info {
+        grid-template-columns: 1fr;
+    }
+
+    .tracking {
+        padding: 15px 10px;
+    }
+
+    .tracking-steps::before {
+        left: 10%;
+        right: 10%;
+    }
+
+    .step-text {
+        font-size: 11px;
+    }
+
+    .step-circle {
+        width: 32px;
+        height: 32px;
+    }
+
+    .order-footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .details-btn {
+        text-align: center;
+    }
+
+}
+
+</style>
+
+
+<div class="orders-page">
+
+    <h1 class="orders-title">
+        📦 My Orders
+    </h1>
+
+
+    {% if orders %}
+
+        {% for order in orders %}
+
+        <div class="order-card">
+
+
+            <!-- ORDER HEADER -->
+
+            <div class="order-header">
+
+                <div class="order-id">
+                    Order #{{ order.id }}
+                </div>
+
+                <div class="order-date">
+                    📅 {{ order.date|date:"d M Y, h:i A" }}
+                </div>
+
+            </div>
+
+
+            <!-- ORDER INFORMATION -->
+
+            <div class="order-info">
+
+
+                <!-- PAYMENT -->
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        Payment Method
+                    </span>
+
+                    <span class="info-value payment">
+
+                        {% if order.payment_method == "Cash on Delivery" %}
+
+                            💵 Cash on Delivery
+
+                        {% elif order.payment_method == "UPI" %}
+
+                            📱 UPI
+
+                        {% elif order.payment_method == "Debit / Credit Card" %}
+
+                            💳 Debit / Credit Card
+
+                        {% else %}
+
+                            {{ order.payment_method }}
+
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        Order Status
+                    </span>
+
+                    <span class="info-value status">
+                        {{ order.status }}
+                    </span>
+
+                </div>
+
+
+                <!-- CUSTOMER -->
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        Customer
+                    </span>
+
+                    <span class="info-value">
+                        {{ order.name }}
+                    </span>
+
+                </div>
+
+
+                <!-- CITY -->
+
+                <div class="info-box">
+
+                    <span class="info-label">
+                        City
+                    </span>
+
+                    <span class="info-value">
+                        {{ order.city }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- ORDER TRACKING -->
+
+            <div class="tracking">
+
+                <div class="tracking-title">
+                    🚚 Order Tracking
+                </div>
+
+
+                {% if order.status == "Cancelled" %}
+
+                    <div class="cancelled">
+                        ❌ This order has been cancelled.
+                    </div>
+
+                {% else %}
+
+                    <div class="tracking-steps">
+
+
+                        <!-- PENDING -->
+
+                        <div class="step
+                            {% if order.status == 'Pending' or order.status == 'Confirmed' or order.status == 'Shipped' or order.status == 'Delivered' %}
+                                active
+                            {% endif %}
+                        ">
+
+                            <div class="step-circle">
+                                1
+                            </div>
+
+                            <div class="step-text">
+                                Pending
+                            </div>
+
+                        </div>
+
+
+                        <!-- CONFIRMED -->
+
+                        <div class="step
+                            {% if order.status == 'Confirmed' or order.status == 'Shipped' or order.status == 'Delivered' %}
+                                active
+                            {% endif %}
+                        ">
+
+                            <div class="step-circle">
+                                2
+                            </div>
+
+                            <div class="step-text">
+                                Confirmed
+                            </div>
+
+                        </div>
+
+
+                        <!-- SHIPPED -->
+
+                        <div class="step
+                            {% if order.status == 'Shipped' or order.status == 'Delivered' %}
+                                active
+                            {% endif %}
+                        ">
+
+                            <div class="step-circle">
+                                3
+                            </div>
+
+                            <div class="step-text">
+                                Shipped
+                            </div>
+
+                        </div>
+
+
+                        <!-- DELIVERED -->
+
+                        <div class="step
+                            {% if order.status == 'Delivered' %}
+                                active
+                            {% endif %}
+                        ">
+
+                            <div class="step-circle">
+                                4
+                            </div>
+
+                            <div class="step-text">
+                                Delivered
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- ORDER FOOTER -->
+
+            <div class="order-footer">
+
+                <div class="total">
+                    Total: ₹{{ order.total }}
+                </div>
+
+                <a
+                    href="{% url 'order_detail' order.id %}"
+                    class="details-btn"
+                >
+                    👁️ View Details
+                </a>
+
+            </div>
+
+
+        </div>
+
+        {% endfor %}
+
+
+    {% else %}
+
+
+        <!-- NO ORDERS -->
+
+        <div class="no-orders">
+
+            <h2>
+                📦 No Orders Yet
+            </h2>
+
+            <p>
+                You haven't placed any orders yet.
+            </p>
+
+            <a
+                href="{% url 'products' %}"
+                class="shop-btn"
+            >
+                🛒 Start Shopping
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,622 @@
+{% extends "base.html" %}
+
+{% block title %}Products - Debamart{% endblock %}
+
+{% block body %}
+
+<style>
+    .products-page {
+        padding: 40px 6%;
+        background: #f8fafc;
+        min-height: 80vh;
+    }
+
+    .products-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .products-header h1 {
+        color: #166534;
+        font-size: 36px;
+        margin-bottom: 8px;
+    }
+
+    .products-header p {
+        color: #64748b;
+        font-size: 16px;
+    }
+
+    /* FILTER BOX */
+    .filter-box {
+        background: white;
+        padding: 22px;
+        border-radius: 16px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        margin-bottom: 35px;
+    }
+
+    .filter-form {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr auto;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .filter-form input,
+    .filter-form select {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        font-size: 14px;
+        outline: none;
+        background: white;
+        box-sizing: border-box;
+    }
+
+    .filter-form input:focus,
+    .filter-form select:focus {
+        border-color: #16a34a;
+    }
+
+    .search-btn {
+        border: none;
+        background: #16a34a;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .search-btn:hover {
+        background: #15803d;
+        transform: translateY(-1px);
+    }
+
+    .clear-btn {
+        display: inline-block;
+        margin-top: 14px;
+        color: #dc2626;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .clear-btn:hover {
+        text-decoration: underline;
+    }
+
+    /* CATEGORY BUTTONS */
+    .category-filter {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 30px;
+        justify-content: center;
+    }
+
+    .category-filter a {
+        text-decoration: none;
+        padding: 9px 16px;
+        border-radius: 20px;
+        background: white;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .category-filter a:hover {
+        background: #16a34a;
+        color: white;
+    }
+
+    /* PRODUCT GRID */
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+    }
+
+    .product-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: 0.3s;
+        position: relative;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+    }
+
+    .product-image-box {
+        width: 100%;
+        height: 220px;
+        background: #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .product-image-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .no-image {
+        color: #94a3b8;
+        font-size: 14px;
+    }
+
+    .product-info {
+        padding: 18px;
+    }
+
+    .product-category {
+        color: #16a34a;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .product-name {
+        color: #1e293b;
+        font-size: 20px;
+        margin: 0 0 8px;
+    }
+
+    .product-description {
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.5;
+        min-height: 42px;
+        margin-bottom: 10px;
+    }
+
+    .rating {
+        color: #f59e0b;
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .price {
+        color: #15803d;
+        font-size: 21px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .stock {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 14px;
+    }
+
+    .stock-available {
+        color: #16a34a;
+    }
+
+    .stock-out {
+        color: #dc2626;
+    }
+
+    .product-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .add-cart-btn {
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        background: #16a34a;
+        color: white;
+        padding: 11px;
+        border-radius: 9px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .add-cart-btn:hover {
+        background: #15803d;
+    }
+
+    .add-cart-btn.disabled {
+        background: #94a3b8;
+        pointer-events: none;
+    }
+
+    .wishlist-btn {
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        background: #fff1f2;
+        color: #e11d48;
+        border: 1px solid #fecdd3;
+        padding: 10px;
+        border-radius: 9px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .wishlist-btn:hover {
+        background: #ffe4e6;
+    }
+
+    .details-btn {
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        background: #f1f5f9;
+        color: #334155;
+        padding: 10px;
+        border-radius: 9px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .details-btn:hover {
+        background: #e2e8f0;
+    }
+
+    .empty-products {
+        text-align: center;
+        background: white;
+        padding: 50px 20px;
+        border-radius: 16px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+    }
+
+    .empty-products h2 {
+        color: #334155;
+        margin-bottom: 8px;
+    }
+
+    .empty-products p {
+        color: #64748b;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+        .products-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .filter-form {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media (max-width: 750px) {
+        .products-page {
+            padding: 30px 4%;
+        }
+
+        .products-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .product-image-box {
+            height: 180px;
+        }
+
+        .filter-form {
+            grid-template-columns: 1fr;
+        }
+
+        .products-header h1 {
+            font-size: 28px;
+        }
+    }
+
+    @media (max-width: 500px) {
+        .products-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .product-image-box {
+            height: 230px;
+        }
+    }
+</style>
+
+
+<section class="products-page">
+
+    <!-- HEADER -->
+    <div class="products-header">
+        <h1>🛒 Our Products</h1>
+        <p>Fresh products at the best prices</p>
+    </div>
+
+
+    <!-- SEARCH + SORT + STOCK FILTER -->
+    <div class="filter-box">
+
+        <form method="GET" action="{% url 'products' %}" class="filter-form">
+
+            <!-- SEARCH -->
+            <input
+                type="text"
+                name="q"
+                placeholder="🔍 Search products..."
+                value="{{ search_query }}"
+            >
+
+            <!-- CATEGORY -->
+            <select name="category">
+                <option value="">All Categories</option>
+
+                {% for category in categories %}
+                    <option
+                        value="{{ category.name }}"
+                        {% if selected_category == category.name %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+
+            <!-- SORT -->
+            <select name="sort">
+
+                <option value="">Default</option>
+
+                <option value="price_low"
+                    {% if selected_sort == "price_low" %}selected{% endif %}>
+                    Price: Low → High
+                </option>
+
+                <option value="price_high"
+                    {% if selected_sort == "price_high" %}selected{% endif %}>
+                    Price: High → Low
+                </option>
+
+                <option value="name_az"
+                    {% if selected_sort == "name_az" %}selected{% endif %}>
+                    Name: A → Z
+                </option>
+
+                <option value="name_za"
+                    {% if selected_sort == "name_za" %}selected{% endif %}>
+                    Name: Z → A
+                </option>
+
+                <option value="rating"
+                    {% if selected_sort == "rating" %}selected{% endif %}>
+                    ⭐ Highest Rating
+                </option>
+
+                <option value="newest"
+                    {% if selected_sort == "newest" %}selected{% endif %}>
+                    🆕 Newest
+                </option>
+
+            </select>
+
+
+            <!-- STOCK -->
+            <select name="stock">
+
+                <option value="">All Stock</option>
+
+                <option value="available"
+                    {% if selected_stock == "available" %}selected{% endif %}>
+                    ✅ Available
+                </option>
+
+                <option value="out"
+                    {% if selected_stock == "out" %}selected{% endif %}>
+                    ❌ Out of Stock
+                </option>
+
+            </select>
+
+
+            <button type="submit" class="search-btn">
+                Search
+            </button>
+
+        </form>
+
+        <a href="{% url 'products' %}" class="clear-btn">
+            ✕ Clear Filters
+        </a>
+
+    </div>
+
+
+    <!-- CATEGORY QUICK FILTER -->
+    <div class="category-filter">
+
+        <a href="{% url 'products' %}">
+            All
+        </a>
+
+        {% for category in categories %}
+
+            <a href="{% url 'products' %}?category={{ category.name|urlencode }}">
+                {{ category.name }}
+            </a>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- PRODUCTS -->
+    {% if products %}
+
+        <div class="products-grid">
+
+            {% for product in products %}
+
+                <div class="product-card">
+
+                    <!-- IMAGE -->
+                    <div class="product-image-box">
+
+                        {% if product.image %}
+
+                            <img
+                                src="{{ product.image.url }}"
+                                alt="{{ product.name }}"
+                            >
+
+                        {% else %}
+
+                            <span class="no-image">
+                                No Image Available
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- INFO -->
+                    <div class="product-info">
+
+                        <div class="product-category">
+                            {{ product.category.name }}
+                        </div>
+
+
+                        <h2 class="product-name">
+                            {{ product.name }}
+                        </h2>
+
+
+                        <div class="product-description">
+                            {{ product.description|truncatechars:80 }}
+                        </div>
+
+
+                        <!-- RATING -->
+                        <div class="rating">
+
+                            {% if product.average_rating %}
+
+                                ⭐ {{ product.average_rating|floatformat:1 }}
+
+                                <span style="color:#64748b;">
+                                    ({{ product.review_count }} reviews)
+                                </span>
+
+                            {% else %}
+
+                                ⭐ No reviews
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- PRICE -->
+                        <div class="price">
+                            ₹{{ product.price }}
+                        </div>
+
+
+                        <!-- STOCK -->
+                        {% if product.stock > 0 %}
+
+                            <div class="stock stock-available">
+                                ✅ {{ product.stock }} items available
+                            </div>
+
+                        {% else %}
+
+                            <div class="stock stock-out">
+                                ❌ Out of Stock
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- BUTTONS -->
+                        <div class="product-buttons">
+
+                            {% if product.stock > 0 %}
+
+                                <a
+                                    href="{% url 'add_to_cart' product.id %}"
+                                    class="add-cart-btn"
+                                >
+                                    🛒 Add to Cart
+                                </a>
+
+                            {% else %}
+
+                                <a class="add-cart-btn disabled">
+                                    ❌ Out of Stock
+                                </a>
+
+                            {% endif %}
+
+
+                            <a
+                                href="{% url 'add_to_wishlist' product.id %}"
+                                class="wishlist-btn"
+                            >
+                                ❤️ Add to Wishlist
+                            </a>
+
+
+                            <a
+                                href="{% url 'product_detail' product.id %}"
+                                class="details-btn"
+                            >
+                                👁️ View Details
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <!-- EMPTY -->
+        <div class="empty-products">
+
+            <h2>😔 No Products Found</h2>
+
+            <p>
+                Try another search, category, or filter.
+            </p>
+
+            <a
+                href="{% url 'products' %}"
+                class="add-cart-btn"
+                style="display:inline-block;margin-top:15px;"
+            >
+                View All Products
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

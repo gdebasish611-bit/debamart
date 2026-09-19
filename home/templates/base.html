@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% block title %}
+    <title>Debamart - Online Shopping</title>
+    {% endblock title %}
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f6f7f9;
+            color: #222;
+            overflow-x: hidden;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            width: 100%;
+            background: #ffffff;
+            padding: 18px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* ================= LOGO ================= */
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #16a34a;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: #222;
+        }
+
+        /* ================= NAV LINKS ================= */
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #16a34a;
+        }
+
+        /* ================= NAV ICONS ================= */
+
+        .nav-icons {
+            display: flex;
+            gap: 10px;
+            font-size: 20px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .nav-icons a {
+            text-decoration: none;
+            color: #222;
+            transition: 0.3s;
+        }
+
+        .nav-icons a:hover {
+            color: #16a34a;
+            transform: translateY(-2px);
+        }
+
+        /* ================= MOBILE MENU BUTTON ================= */
+
+        .menu-btn {
+            display: none;
+            border: none;
+            background: #16a34a;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        /* ================= WISHLIST ================= */
+
+        .wishlist-nav {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .wishlist-nav:hover {
+            background: #fff1f2;
+            transform: translateY(-2px);
+        }
+
+        /* ================= USER PROFILE ================= */
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            color: #16a34a !important;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .user-profile:hover {
+            color: #15803d !important;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #16a34a;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* ================= LOGOUT ================= */
+
+        .logout-link {
+            text-decoration: none;
+            color: #222;
+            font-size: 20px;
+            transition: 0.3s;
+        }
+
+        .logout-link:hover {
+            color: #16a34a;
+            transform: translateY(-2px);
+        }
+
+        /* ================= SEARCH ================= */
+
+        .search-form {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .search-form input {
+            width: 180px;
+            height: 38px;
+            padding: 8px 14px;
+            border: 1px solid #16a34a;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-form input:focus {
+            box-shadow: 0 0 6px rgba(22, 163, 74, 0.25);
+        }
+
+        .search-form button {
+            width: 38px;
+            height: 38px;
+            border: none;
+            border-radius: 50%;
+            background: #16a34a;
+            color: white;
+            cursor: pointer;
+            font-size: 17px;
+            transition: 0.3s;
+        }
+
+        .search-form button:hover {
+            background: #15803d;
+            transform: scale(1.05);
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 520px;
+            padding: 70px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            background: linear-gradient(135deg, #dcfce7, #ffffff);
+        }
+
+        .hero-content {
+            max-width: 550px;
+        }
+
+        .hero-content small {
+            color: #16a34a;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .hero-content h1 {
+            font-size: 55px;
+            line-height: 1.1;
+            margin: 15px 0;
+        }
+
+        .hero-content h1 span {
+            color: #16a34a;
+        }
+
+        .hero-content p {
+            color: #666;
+            font-size: 18px;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .shop-btn {
+            display: inline-block;
+            background: #16a34a;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .shop-btn:hover {
+            background: #15803d;
+            transform: translateY(-2px);
+        }
+
+        .hero-image {
+            width: 45%;
+            height: 350px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #bbf7d0, #86efac);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 120px;
+        }
+
+        /* ================= SECTION ================= */
+
+        .section {
+            padding: 65px 7%;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .section-title h2 {
+            font-size: 34px;
+            margin-bottom: 8px;
+        }
+
+        .section-title p {
+            color: #777;
+        }
+
+        /* ================= CATEGORIES ================= */
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+        }
+
+        .category-card {
+            background: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+            transition: 0.3s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .category-icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+        .category-card h3 {
+            margin-bottom: 7px;
+        }
+
+        .category-card p {
+            color: #777;
+        }
+
+        .category-link {
+            display: inline-block;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        .category-link:hover {
+            color: #15803d;
+        }
+
+        /* ================= PRODUCTS ================= */
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+            transition: 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-7px);
+        }
+
+        .product-image {
+            height: 210px;
+            background: #f0fdf4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 80px;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-info h3 {
+            margin-bottom: 8px;
+        }
+
+        .product-category {
+            color: #777;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .rating {
+            color: #f59e0b;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 21px;
+            font-weight: bold;
+            color: #16a34a;
+            margin-bottom: 15px;
+        }
+
+        .cart-btn {
+            display: block;
+            width: 100%;
+            border: none;
+            background: #16a34a;
+            color: white;
+            padding: 12px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .cart-btn:hover {
+            background: #15803d;
+        }
+
+        .no-image {
+            font-size: 70px;
+        }
+
+        /* ================= OFFER ================= */
+
+        .offer {
+            margin: 20px 7% 65px;
+            padding: 50px;
+            border-radius: 20px;
+            background: #166534;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .offer h2 {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .offer p {
+            color: #dcfce7;
+        }
+
+        .offer-btn {
+            background: white;
+            color: #166534;
+            padding: 14px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* ================= FEATURES ================= */
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .feature {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .feature p {
+            color: #777;
+            margin-top: 8px;
+        }
+
+        /* ================= PAGE CONTENT ================= */
+
+        .page-container {
+            min-height: 500px;
+            padding: 60px 7%;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #111827;
+            color: white;
+            padding: 50px 7% 25px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4ade80;
+            margin-bottom: 15px;
+        }
+
+        .footer-content h3 {
+            margin-bottom: 15px;
+        }
+
+        .footer-content p,
+        .footer-content a {
+            color: #9ca3af;
+            line-height: 2;
+            text-decoration: none;
+            display: block;
+            overflow-wrap: anywhere;
+        }
+
+        .footer-content a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            border-top: 1px solid #374151;
+            margin-top: 35px;
+            padding-top: 20px;
+            color: #9ca3af;
+        }
+
+        /* ================================================= */
+        /* ================= RESPONSIVE ==================== */
+        /* ================================================= */
+
+        @media (max-width: 1100px) {
+
+            .navbar {
+                padding: 15px 4%;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .search-form input {
+                width: 140px;
+            }
+
+            .categories,
+            .products {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        /* ================= TABLET ================= */
+
+        @media (max-width: 900px) {
+
+            .navbar {
+                position: relative;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 20px 7%;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 18px;
+                box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 60px 6%;
+            }
+
+            .hero-content {
+                max-width: 700px;
+            }
+
+            .hero-content h1 {
+                font-size: 42px;
+            }
+
+            .hero-image {
+                width: 100%;
+                height: 300px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .offer {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 12px 4%;
+                gap: 8px;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+
+            .menu-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 20px;
+            }
+
+            .nav-icons {
+                gap: 5px;
+                font-size: 18px;
+            }
+
+            .search-form input {
+                width: 105px;
+                height: 36px;
+                font-size: 12px;
+                padding: 7px 10px;
+            }
+
+            .search-form button {
+                width: 36px;
+                height: 36px;
+                font-size: 15px;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .wishlist-nav {
+                width: 34px;
+                height: 34px;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 45px 5%;
+                gap: 30px;
+            }
+
+            .hero-content small {
+                font-size: 13px;
+            }
+
+            .hero-content h1 {
+                font-size: 32px;
+            }
+
+            .hero-content p {
+                font-size: 15px;
+                line-height: 1.6;
+            }
+
+            .hero-image {
+                height: 230px;
+                font-size: 80px;
+                border-radius: 18px;
+            }
+
+            .section {
+                padding: 45px 5%;
+            }
+
+            .section-title h2 {
+                font-size: 27px;
+            }
+
+            .section-title p {
+                font-size: 14px;
+            }
+
+            .categories,
+            .products {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+
+            .category-card {
+                padding: 25px 15px;
+            }
+
+            .product-image {
+                height: 230px;
+            }
+
+            .product-info {
+                padding: 17px;
+            }
+
+            .offer {
+                margin: 10px 5% 45px;
+                padding: 35px 20px;
+            }
+
+            .offer h2 {
+                font-size: 27px;
+            }
+
+            .offer p {
+                font-size: 14px;
+                line-height: 1.6;
+            }
+
+            .offer-btn {
+                padding: 12px 20px;
+            }
+
+            .page-container {
+                padding: 40px 5%;
+            }
+
+            footer {
+                padding: 40px 5% 20px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .footer-logo {
+                font-size: 25px;
+            }
+
+        }
+
+        /* ================= SMALL MOBILE ================= */
+
+        @media (max-width: 400px) {
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .search-form input {
+                width: 85px;
+            }
+
+            .nav-icons {
+                gap: 3px;
+                font-size: 17px;
+            }
+
+            .hero-content h1 {
+                font-size: 28px;
+            }
+
+            .hero-image {
+                height: 200px;
+                font-size: 65px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav class="navbar">
+
+        <!-- LOGO -->
+
+        <div class="logo">
+            D<span>ebamart</span>
+        </div>
+
+        <!-- MOBILE MENU BUTTON -->
+
+        <button
+            class="menu-btn"
+            onclick="toggleMenu()"
+            aria-label="Open menu"
+        >
+            ☰
+        </button>
+
+        <!-- NAV LINKS -->
+
+        <ul class="nav-links" id="navLinks">
+
+            <li>
+                <a href="{% url 'home' %}">
+                    Home
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'categories' %}">
+                    Categories
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'products' %}">
+                    Products
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'about' %}">
+                    About
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'contact' %}">
+                    Contact
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'my_orders' %}">
+                    My Orders
+                </a>
+            </li>
+
+        </ul>
+
+        <!-- ================= NAVBAR ICONS ================= -->
+
+        <div class="nav-icons">
+
+            <!-- SEARCH -->
+
+            <form
+                action="{% url 'products' %}"
+                method="GET"
+                class="search-form"
+            >
+
+                <input
+                    type="text"
+                    name="q"
+                    placeholder="Search..."
+                    value="{{ query }}"
+                >
+
+                <button type="submit">
+                    🔍
+                </button>
+
+            </form>
+
+            <!-- CART -->
+
+            <a
+                href="{% url 'cart' %}"
+                title="Cart"
+            >
+                🛒
+            </a>
+
+            <!-- WISHLIST -->
+
+            <a
+                href="{% url 'wishlist' %}"
+                class="wishlist-nav"
+                title="My Wishlist"
+            >
+                ❤️
+            </a>
+
+            <!-- MY ORDERS -->
+
+            <a
+                href="{% url 'my_orders' %}"
+                title="My Orders"
+            >
+                📦
+            </a>
+
+            <!-- PROFILE -->
+
+            {% if user.is_authenticated %}
+
+                <a
+                    href="{% url 'profile' %}"
+                    class="user-profile"
+                    title="My Profile"
+                >
+
+                    👤
+
+                    <span class="user-name">
+                        {{ user.username }}
+                    </span>
+
+                </a>
+
+                <!-- LOGOUT -->
+
+                <a
+                    href="{% url 'logout' %}"
+                    class="logout-link"
+                    title="Logout"
+                >
+                    🚪
+                </a>
+
+            {% else %}
+
+                <!-- LOGIN -->
+
+                <a
+                    href="{% url 'login' %}"
+                    title="Login"
+                >
+                    👤
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+    <!-- ================= MAIN PAGE CONTENT ================= -->
+
+    {% block body %}
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <small>
+                WELCOME TO DEBAMART
+            </small>
+
+            <h1>
+                Everything You Need,
+                <span>
+                    All In One Place.
+                </span>
+            </h1>
+
+            <p>
+                Discover quality products at the best prices.
+                Shop easily, safely and get your favorite products
+                delivered to your doorstep.
+            </p>
+
+            <a
+                href="{% url 'products' %}"
+                class="shop-btn"
+            >
+                Shop Now →
+            </a>
+
+        </div>
+
+        <div class="hero-image">
+            🛍️
+        </div>
+
+    </section>
+
+    <!-- ================= CATEGORY SECTION ================= -->
+
+    <section
+        class="section"
+        id="categories"
+    >
+
+        <div class="section-title">
+
+            <h2>
+                Shop By Category
+            </h2>
+
+            <p>
+                Find everything you need
+            </p>
+
+        </div>
+
+        <div class="categories">
+
+            <div class="category-card">
+
+                <div class="category-icon">
+                    🥦
+                </div>
+
+                <h3>
+                    Fruits & Vegetables
+                </h3>
+
+                <p>
+                    Fresh & Quality
+                </p>
+
+                <a
+                    href="/products/?category=Fruits%20%26%20Vegetables"
+                    class="category-link"
+                >
+                    Explore →
+                </a>
+
+            </div>
+
+            <div class="category-card">
+
+                <div class="category-icon">
+                    🛒
+                </div>
+
+                <h3>
+                    Grocery
+                </h3>
+
+                <p>
+                    Daily Essentials
+                </p>
+
+                <a
+                    href="/products/?category=Grocery"
+                    class="category-link"
+                >
+                    Explore →
+                </a>
+
+            </div>
+
+            <div class="category-card">
+
+                <div class="category-icon">
+                    🥛
+                </div>
+
+                <h3>
+                    Dairy
+                </h3>
+
+                <p>
+                    Fresh Dairy Products
+                </p>
+
+                <a
+                    href="/products/?category=Dairy"
+                    class="category-link"
+                >
+                    Explore →
+                </a>
+
+            </div>
+
+            <div class="category-card">
+
+                <div class="category-icon">
+                    🍪
+                </div>
+
+                <h3>
+                    Snacks
+                </h3>
+
+                <p>
+                    Tasty Snacks
+                </p>
+
+                <a
+                    href="/products/?category=Snacks"
+                    class="category-link"
+                >
+                    Explore →
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ================= REAL PRODUCTS ================= -->
+
+    <section
+        class="section"
+        id="products"
+    >
+
+        <div class="section-title">
+
+            <h2>
+                🔥 Trending Products
+            </h2>
+
+            <p>
+                Products available in Debamart
+            </p>
+
+        </div>
+
+        <div class="products">
+
+            {% for product in products %}
+
+            <div class="product-card">
+
+                <div class="product-image">
+
+                    {% if product.image %}
+
+                        <img
+                            src="{{ product.image.url }}"
+                            alt="{{ product.name }}"
+                        >
+
+                    {% else %}
+
+                        <div class="no-image">
+                            🛒
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+                <div class="product-info">
+
+                    <h3>
+                        {{ product.name }}
+                    </h3>
+
+                    <div class="product-category">
+                        {{ product.category.name }}
+                    </div>
+
+                    <div class="rating">
+                        ★★★★★
+                    </div>
+
+                    <div class="price">
+                        ₹{{ product.price }}
+                    </div>
+
+                    {% if product.stock > 0 %}
+
+                        <a
+                            href="{% url 'add_to_cart' product.id %}"
+                            class="cart-btn"
+                        >
+                            🛒 Add To Cart
+                        </a>
+
+                    {% else %}
+
+                        <button
+                            class="cart-btn"
+                            disabled
+                            style="background:#999;"
+                        >
+                            Out Of Stock
+                        </button>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div
+                style="
+                    grid-column:1/-1;
+                    text-align:center;
+                    padding:50px;
+                    background:white;
+                    border-radius:15px;
+                "
+            >
+
+                <h3>
+                    No products found
+                </h3>
+
+                <p
+                    style="
+                        margin-top:10px;
+                        color:#777;
+                    "
+                >
+                    Please add products from Django Admin.
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+    <!-- ================= OFFER ================= -->
+
+    <div class="offer">
+
+        <div>
+
+            <h2>
+                🎉 Special Offer!
+            </h2>
+
+            <p>
+                Get up to 50% OFF on selected products.
+            </p>
+
+        </div>
+
+        <a
+            href="{% url 'products' %}"
+            class="offer-btn"
+        >
+            Shop Deals
+        </a>
+
+    </div>
+
+    <!-- ================= FEATURES ================= -->
+
+    <section
+        class="section"
+        id="about"
+    >
+
+        <div class="section-title">
+
+            <h2>
+                Why Choose Debamart?
+            </h2>
+
+            <p>
+                Shopping made simple and reliable
+            </p>
+
+        </div>
+
+        <div class="features">
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    🚚
+                </div>
+
+                <h3>
+                    Fast Delivery
+                </h3>
+
+                <p>
+                    Get your products delivered quickly.
+                </p>
+
+            </div>
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    💰
+                </div>
+
+                <h3>
+                    Best Prices
+                </h3>
+
+                <p>
+                    Great products at affordable prices.
+                </p>
+
+            </div>
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    🔒
+                </div>
+
+                <h3>
+                    Secure Shopping
+                </h3>
+
+                <p>
+                    Your shopping experience is safe and secure.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    {% endblock body %}
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <div class="footer-content">
+
+            <!-- ABOUT -->
+
+            <div>
+
+                <div class="footer-logo">
+                    Debamart
+                </div>
+
+                <p>
+                    Your trusted online shopping mart.
+                    Quality products, great prices and
+                    a better shopping experience.
+                </p>
+
+            </div>
+
+            <!-- QUICK LINKS -->
+
+            <div>
+
+                <h3>
+                    Quick Links
+                </h3>
+
+                <a href="{% url 'home' %}">
+                    Home
+                </a>
+
+                <a href="{% url 'products' %}">
+                    Products
+                </a>
+
+                <a href="{% url 'categories' %}">
+                    Categories
+                </a>
+
+                <a href="{% url 'about' %}">
+                    About
+                </a>
+
+            </div>
+
+            <!-- CUSTOMER -->
+
+            <div>
+
+                <h3>
+                    Customer
+                </h3>
+
+                {% if user.is_authenticated %}
+
+                    <a href="{% url 'profile' %}">
+                        👤 My Profile
+                    </a>
+
+                {% else %}
+
+                    <a href="{% url 'login' %}">
+                        👤 Login
+                    </a>
+
+                {% endif %}
+
+                <a href="{% url 'my_orders' %}">
+                    📦 My Orders
+                </a>
+
+                <a href="{% url 'wishlist' %}">
+                    ❤️ My Wishlist
+                </a>
+
+                <a href="{% url 'cart' %}">
+                    🛒 My Cart
+                </a>
+
+                <a href="{% url 'contact' %}">
+                    Help Center
+                </a>
+
+            </div>
+
+            <!-- CONTACT -->
+
+            <div>
+
+                <h3>
+                    Contact
+                </h3>
+
+                <p>
+                    📧 support@debamart.com
+                </p>
+
+                <p>
+                    📞 +91 98765 43210
+                </p>
+
+                <p>
+                    📍 Bhubaneswar, India
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="copyright">
+            © 2026 Debamart. All Rights Reserved.
+        </div>
+
+    </footer>
+
+    <!-- ================= MOBILE MENU JAVASCRIPT ================= -->
+
+    <script>
+
+        function toggleMenu() {
+
+            const navLinks = document.getElementById("navLinks");
+
+            navLinks.classList.toggle("active");
+
+        }
+
+        // Mobile menu link click ke baad menu close
+
+        document.querySelectorAll("#navLinks a").forEach(function(link) {
+
+            link.addEventListener("click", function() {
+
+                document.getElementById("navLinks").classList.remove("active");
+
+            });
+
+        });
+
+    </script>
+
+</body>
+
+</html>

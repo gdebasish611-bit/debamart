@@ -1,0 +1,964 @@
+{% extends "base.html" %}
+
+{% block title %}Debamart - Online Shopping{% endblock title %}
+
+{% block content %}
+
+<style>
+
+/* ================= HERO ================= */
+
+.hero {
+    min-height: 520px;
+    padding: 70px 7%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #dcfce7, #ffffff);
+    gap: 40px;
+}
+
+.hero-content {
+    max-width: 550px;
+}
+
+.hero-content small {
+    color: #16a34a;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.hero-content h1 {
+    font-size: 55px;
+    line-height: 1.1;
+    margin: 15px 0;
+}
+
+.hero-content h1 span {
+    color: #16a34a;
+}
+
+.hero-content p {
+    color: #666;
+    font-size: 18px;
+    line-height: 1.7;
+    margin-bottom: 25px;
+}
+
+.shop-btn {
+    display: inline-block;
+    background: #16a34a;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.shop-btn:hover {
+    background: #15803d;
+    transform: translateY(-2px);
+}
+
+.hero-image {
+    width: 45%;
+    height: 350px;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #bbf7d0, #86efac);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 120px;
+}
+
+
+/* ================= SECTION ================= */
+
+.section {
+    padding: 65px 7%;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.section-title h2 {
+    font-size: 34px;
+    margin-bottom: 8px;
+}
+
+.section-title p {
+    color: #777;
+}
+
+
+/* ================= CATEGORIES ================= */
+
+.categories {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+}
+
+.category-card {
+    background: white;
+    padding: 30px 20px;
+    text-align: center;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.category-card:hover {
+    transform: translateY(-8px);
+}
+
+.category-icon {
+    font-size: 55px;
+    margin-bottom: 15px;
+}
+
+.category-card h3 {
+    margin-bottom: 7px;
+}
+
+.category-card p {
+    color: #777;
+}
+
+
+/* ================= PRODUCTS ================= */
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+    transition: 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-7px);
+}
+
+.product-image {
+    height: 210px;
+    background: #f0fdf4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.no-image {
+    font-size: 70px;
+}
+
+.product-info {
+    padding: 20px;
+}
+
+.product-info h3 {
+    margin-bottom: 8px;
+}
+
+.category-name {
+    color: #16a34a;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+.rating {
+    color: #f59e0b;
+    margin-bottom: 10px;
+}
+
+.rating span {
+    color: #777;
+    font-size: 13px;
+}
+
+.price {
+    font-size: 21px;
+    font-weight: bold;
+    color: #16a34a;
+    margin-bottom: 15px;
+}
+
+.cart-btn {
+    width: 100%;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    background: #16a34a;
+    color: white;
+    padding: 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    box-sizing: border-box;
+}
+
+.cart-btn:hover {
+    background: #15803d;
+}
+
+.details-btn {
+    width: 100%;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    background: #f1f5f9;
+    color: #334155;
+    padding: 11px;
+    border-radius: 7px;
+    margin-top: 8px;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+.details-btn:hover {
+    background: #e2e8f0;
+}
+
+.wishlist-btn {
+    width: 100%;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    background: #fff1f2;
+    color: #e11d48;
+    border: 1px solid #fecdd3;
+    padding: 10px;
+    border-radius: 7px;
+    margin-top: 8px;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+.wishlist-btn:hover {
+    background: #ffe4e6;
+}
+
+
+/* ================= OFFER PRODUCTS ================= */
+
+.offer-products {
+    background: #f0fdf4;
+    padding-top: 65px;
+    padding-bottom: 65px;
+}
+
+.offer-badge {
+    display: inline-block;
+    background: #dc2626;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.offer-price-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.offer-price {
+    color: #16a34a;
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.offer-text {
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+
+/* ================= OFFER BANNER ================= */
+
+.offer {
+    margin: 20px 7% 65px;
+    padding: 50px;
+    border-radius: 20px;
+    background: #166534;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.offer h2 {
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+
+.offer p {
+    color: #dcfce7;
+}
+
+.offer-btn {
+    background: white;
+    color: #166534;
+    padding: 14px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.offer-btn:hover {
+    transform: translateY(-2px);
+}
+
+
+/* ================= EMPTY ================= */
+
+.empty-products {
+    text-align: center;
+    padding: 40px;
+    color: #777;
+    background: white;
+    border-radius: 15px;
+}
+
+
+/* ================= FEATURES ================= */
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.feature {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.feature-icon {
+    font-size: 45px;
+    margin-bottom: 15px;
+}
+
+.feature p {
+    color: #777;
+    margin-top: 8px;
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+
+    .hero {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero-content h1 {
+        font-size: 42px;
+    }
+
+    .hero-image {
+        width: 100%;
+    }
+
+    .categories,
+    .products {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .features {
+        grid-template-columns: 1fr;
+    }
+
+    .offer {
+        flex-direction: column;
+        text-align: center;
+        gap: 25px;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .hero {
+        padding: 50px 5%;
+    }
+
+    .hero-content h1 {
+        font-size: 35px;
+    }
+
+    .categories,
+    .products {
+        grid-template-columns: 1fr;
+    }
+
+    .section {
+        padding: 45px 5%;
+    }
+
+    .offer {
+        margin: 10px 5% 45px;
+        padding: 35px 20px;
+    }
+
+    .offer h2 {
+        font-size: 27px;
+    }
+}
+
+</style>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <small>WELCOME TO DEBAMART</small>
+
+        <h1>
+            Everything You Need,
+            <span>All In One Place.</span>
+        </h1>
+
+        <p>
+            Discover quality products at the best prices.
+            Shop easily, safely and get your favorite products
+            delivered to your doorstep.
+        </p>
+
+        <a href="{% url 'products' %}" class="shop-btn">
+            Shop Now →
+        </a>
+
+    </div>
+
+    <div class="hero-image">
+        🛍️
+    </div>
+
+</section>
+
+
+<!-- ================= DYNAMIC CATEGORY SECTION ================= -->
+
+<section class="section" id="categories">
+
+    <div class="section-title">
+
+        <h2>
+            Shop By Category
+        </h2>
+
+        <p>
+            Find everything you need
+        </p>
+
+    </div>
+
+
+    <div class="categories">
+
+        {% for category in categories %}
+
+            <a
+                href="{% url 'products' %}?category={{ category.name|urlencode }}"
+                class="category-card"
+                style="text-decoration:none; color:inherit;"
+            >
+
+                <!-- AUTOMATIC CATEGORY ICON -->
+
+                <div class="category-icon">
+
+                    {% if "fruit" in category.name|lower or "vegetable" in category.name|lower %}
+
+                        🥦
+
+                    {% elif "dairy" in category.name|lower or "milk" in category.name|lower %}
+
+                        🥛
+
+                    {% elif "snack" in category.name|lower or "biscuit" in category.name|lower %}
+
+                        🍪
+
+                    {% elif "grocery" in category.name|lower %}
+
+                        🛒
+
+                    {% elif "electronics" in category.name|lower %}
+
+                        📱
+
+                    {% elif "fashion" in category.name|lower %}
+
+                        👕
+
+                    {% elif "home" in category.name|lower %}
+
+                        🏠
+
+                    {% elif "beverage" in category.name|lower or "drink" in category.name|lower %}
+
+                        🥤
+
+                    {% elif "personal" in category.name|lower %}
+
+                        🧴
+
+                    {% else %}
+
+                        🛍️
+
+                    {% endif %}
+
+                </div>
+
+
+                <h3>
+                    {{ category.name }}
+                </h3>
+
+                <p>
+                    Explore Products
+                </p>
+
+            </a>
+
+        {% empty %}
+
+            <div class="empty-products">
+
+                <h3>
+                    No Categories Available
+                </h3>
+
+                <p>
+                    Add categories from the Admin Panel.
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- ================= FEATURED PRODUCTS ================= -->
+
+<section class="section" id="featured">
+
+    <div class="section-title">
+
+        <h2>
+            ⭐ Featured Products
+        </h2>
+
+        <p>
+            Our popular products for you
+        </p>
+
+    </div>
+
+
+    {% if featured_products %}
+
+        <div class="products">
+
+            {% for product in featured_products %}
+
+                <div class="product-card">
+
+                    <!-- IMAGE -->
+
+                    <div class="product-image">
+
+                        {% if product.image %}
+
+                            <img
+                                src="{{ product.image.url }}"
+                                alt="{{ product.name }}"
+                            >
+
+                        {% else %}
+
+                            <span class="no-image">
+                                🛍️
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- INFO -->
+
+                    <div class="product-info">
+
+                        <div class="category-name">
+                            {{ product.category.name }}
+                        </div>
+
+                        <h3>
+                            {{ product.name }}
+                        </h3>
+
+
+                        <!-- RATING -->
+
+                        <div class="rating">
+
+                            {% if product.average_rating %}
+
+                                ⭐ {{ product.average_rating|floatformat:1 }}
+
+                                <span>
+                                    ({{ product.review_count }} reviews)
+                                </span>
+
+                            {% else %}
+
+                                ⭐ No reviews
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- PRICE -->
+
+                        <div class="price">
+                            ₹{{ product.price }}
+                        </div>
+
+
+                        <!-- CART -->
+
+                        <a
+                            href="{% url 'add_to_cart' product.id %}"
+                            class="cart-btn"
+                        >
+                            🛒 Add to Cart
+                        </a>
+
+
+                        <!-- WISHLIST -->
+
+                        <a
+                            href="{% url 'add_to_wishlist' product.id %}"
+                            class="wishlist-btn"
+                        >
+                            ❤️ Add to Wishlist
+                        </a>
+
+
+                        <!-- DETAILS -->
+
+                        <a
+                            href="{% url 'product_detail' product.id %}"
+                            class="details-btn"
+                        >
+                            👁️ View Details
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <div style="text-align:center; margin-top:30px;">
+
+            <a
+                href="{% url 'products' %}"
+                class="shop-btn"
+            >
+                View All Products →
+            </a>
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-products">
+
+            <h3>
+                No featured products available
+            </h3>
+
+            <p>
+                Products added from the admin panel will appear here.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+<!-- ================= SPECIAL OFFERS ================= -->
+
+<section class="section offer-products">
+
+    <div class="section-title">
+
+        <h2>
+            🔥 Special Offers
+        </h2>
+
+        <p>
+            Check out these products and grab your deals
+        </p>
+
+    </div>
+
+
+    {% if offer_products %}
+
+        <div class="products">
+
+            {% for product in offer_products %}
+
+                <div class="product-card">
+
+                    <!-- IMAGE -->
+
+                    <div class="product-image">
+
+                        {% if product.image %}
+
+                            <img
+                                src="{{ product.image.url }}"
+                                alt="{{ product.name }}"
+                            >
+
+                        {% else %}
+
+                            <span class="no-image">
+                                🎁
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span class="offer-badge">
+                            🔥 SPECIAL DEAL
+                        </span>
+
+
+                        <div class="category-name">
+                            {{ product.category.name }}
+                        </div>
+
+
+                        <h3>
+                            {{ product.name }}
+                        </h3>
+
+
+                        <div class="offer-price-box">
+
+                            <span class="offer-price">
+                                ₹{{ product.price }}
+                            </span>
+
+                            <span class="offer-text">
+                                Great Price
+                            </span>
+
+                        </div>
+
+
+                        <a
+                            href="{% url 'add_to_cart' product.id %}"
+                            class="cart-btn"
+                        >
+                            🛒 Grab Deal
+                        </a>
+
+
+                        <a
+                            href="{% url 'add_to_wishlist' product.id %}"
+                            class="wishlist-btn"
+                        >
+                            ❤️ Add to Wishlist
+                        </a>
+
+
+                        <a
+                            href="{% url 'product_detail' product.id %}"
+                            class="details-btn"
+                        >
+                            👁️ View Details
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-products">
+
+            <h3>
+                No special offers right now
+            </h3>
+
+            <p>
+                New deals will appear here when products are available.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+<!-- ================= OFFER BANNER ================= -->
+
+<div class="offer">
+
+    <div>
+
+        <h2>
+            🎉 Special Offer!
+        </h2>
+
+        <p>
+            Discover amazing products at great prices.
+        </p>
+
+    </div>
+
+
+    <a
+        href="{% url 'products' %}"
+        class="offer-btn"
+    >
+        Shop Deals
+    </a>
+
+</div>
+
+
+<!-- ================= FEATURES ================= -->
+
+<section class="section">
+
+    <div class="section-title">
+
+        <h2>
+            Why Choose Debamart?
+        </h2>
+
+        <p>
+            Shopping made simple and reliable
+        </p>
+
+    </div>
+
+
+    <div class="features">
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                🚚
+            </div>
+
+            <h3>
+                Fast Delivery
+            </h3>
+
+            <p>
+                Get your products delivered quickly.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                💰
+            </div>
+
+            <h3>
+                Best Prices
+            </h3>
+
+            <p>
+                Great products at affordable prices.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <div class="feature-icon">
+                🔒
+            </div>
+
+            <h3>
+                Secure Shopping
+            </h3>
+
+            <p>
+                Your shopping experience is safe and secure.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock content %}

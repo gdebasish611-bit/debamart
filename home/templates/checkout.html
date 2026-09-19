@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+
+{% block title %}
+Checkout - Debamart
+{% endblock %}
+
+{% block body %}
+
+<style>
+
+.checkout-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.checkout-title {
+    text-align: center;
+    color: #198754;
+    margin-bottom: 30px;
+}
+
+.checkout-box {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 30px;
+}
+
+.checkout-form,
+.order-summary {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.checkout-form h2,
+.order-summary h2 {
+    color: #198754;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    box-sizing: border-box;
+    font-size: 15px;
+}
+
+.form-group textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #198754;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 2px solid #198754;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.place-order-btn {
+    width: 100%;
+    margin-top: 25px;
+    padding: 14px;
+    border: none;
+    border-radius: 7px;
+    background: #198754;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.place-order-btn:hover {
+    background: #146c43;
+}
+
+.back-cart {
+    display: inline-block;
+    margin-top: 15px;
+    color: #198754;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+
+    .checkout-box {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+
+
+<div class="checkout-container">
+
+    <h1 class="checkout-title">
+        🛒 Checkout
+    </h1>
+
+
+    <div class="checkout-box">
+
+
+        <!-- =========================
+             CUSTOMER FORM
+        ========================== -->
+
+        <div class="checkout-form">
+
+            <h2>Delivery Details</h2>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <div class="form-group">
+
+                    <label>
+                        Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Enter your name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Phone
+                    </label>
+
+                    <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Enter your phone number"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Address
+                    </label>
+
+                    <textarea
+                        name="address"
+                        placeholder="Enter your full address"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        City
+                    </label>
+
+                    <input
+                        type="text"
+                        name="city"
+                        placeholder="Enter your city"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        PIN Code
+                    </label>
+
+                    <input
+                        type="text"
+                        name="pincode"
+                        placeholder="Enter PIN code"
+                        maxlength="10"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="place-order-btn"
+                >
+                    ✅ Place Order
+                </button>
+
+            </form>
+
+
+            <a
+                href="{% url 'cart' %}"
+                class="back-cart"
+            >
+                ← Back to Cart
+            </a>
+
+        </div>
+
+
+
+        <!-- =========================
+             ORDER SUMMARY
+        ========================== -->
+
+        <div class="order-summary">
+
+            <h2>
+                Order Summary
+            </h2>
+
+
+            {% for item in cart_items %}
+
+            <div class="order-item">
+
+                <span>
+                    {{ item.product.name }}
+                    × {{ item.quantity }}
+                </span>
+
+                <strong>
+                    ₹{{ item.total }}
+                </strong>
+
+            </div>
+
+            {% endfor %}
+
+
+            <div class="total-row">
+
+                <span>
+                    Total
+                </span>
+
+                <span>
+                    ₹{{ cart_total }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+{% endblock %}
