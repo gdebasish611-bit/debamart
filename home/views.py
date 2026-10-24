@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.conf import settings
+from django.db import transaction
 
 from django.contrib.auth import authenticate, login, logout
 
@@ -15,6 +17,7 @@ from django.utils import timezone
 from datetime import timedelta
 
 import random
+import razorpay
 
 from .models import (
     Contact,
@@ -788,19 +791,20 @@ def payment(request, order_id):
 
     items = OrderItem.objects.filter(
         order=order
-    ).select_related(
-        "product"
-    )
+    ).select_related("product")
 
     # ----------------------------------------------
-    # PLACE ORDER
+    # PREVENT DUPLICATE ORDER CONFIRMATION
     # ----------------------------------------------
+    if order.status == "Confirmed":
+        return redirect("order_success", order_id=order.id)
 
+    # ----------------------------------------------
+    # PAYMENT SUBMITTED
+    # ----------------------------------------------
     if request.method == "POST":
 
-        payment_method = request.POST.get(
-            "payment_method"
-        )
+        payment_method = request.POST.get("payment_method", "").strip()
 
         allowed_methods = [
             "Cash on Delivery",
@@ -809,99 +813,300 @@ def payment(request, order_id):
         ]
 
         if payment_method not in allowed_methods:
+            return render(request, "payment.html", {
+                "order": order,
+                "items": items,
+                "total": order.total,
+                "error": "Please select a valid payment method.",
+            })
 
-            return render(
-                request,
-                "payment.html",
-                {
+        # ------------------------------------------
+        # RAZORPAY PAYMENT VERIFICATION
+        # ------------------------------------------
+        razorpay_payment_id = request.POST.get("razorpay_payment_id", "").strip()
+        razorpay_order_id = request.POST.get("razorpay_order_id", "").strip()
+        razorpay_signature = request.POST.get("razorpay_signature", "").strip()
+
+        if (
+            payment_method in ["UPI", "Debit / Credit Card"]
+            and razorpay_payment_id
+            and razorpay_order_id
+            and razorpay_signature
+        ):
+
+            if not order.razorpay_order_id or razorpay_order_id != order.razorpay_order_id:
+                return render(request, "payment.html", {
+                    "order": order,
+                    "items": items,
+                    "total": order.total,
+                    "error": "Invalid Razorpay order.",
+                })
+
+            if not settings.RAZORPAY_KEY_ID or not settings.RAZORPAY_KEY_SECRET:
+                return render(request, "payment.html", {
+                    "order": order,
+                    "items": items,
+                    "total": order.total,
+                    "error": "Razorpay is not configured on the server.",
+                })
+
+            client = razorpay.Client(
+                auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
+            )
+
+            # Verify Razorpay signature on backend
+            try:
+                client.utility.verify_payment_signature({
+                    "razorpay_order_id": razorpay_order_id,
+                    "razorpay_payment_id": razorpay_payment_id,
+                    "razorpay_signature": razorpay_signature,
+                })
+            except Exception:
+                return render(request, "payment.html", {
+                    "order": order,
+                    "items": items,
+                    "total": order.total,
+                    "error": "Payment verification failed. Please try again.",
+                })
+
+            # Verify actual payment details from Razorpay
+            try:
+                payment_data = client.payment.fetch(razorpay_payment_id)
+            except Exception:
+                return render(request, "payment.html", {
+                    "order": order,
+                    "items": items,
+                    "total": order.total,
+                    "error": "Unable to verify payment details.",
+                })
+
+            expected_amount = int(order.total * 100)
+            paid_amount = int(payment_data.get("amount", 0))
+            paid_currency = payment_data.get("currency", "")
+            payment_status = payment_data.get("status", "")
+
+            if paid_amount != expected_amount:
+                return render(request, "payment.html", {
+                    "order": order,
+                    "items": items,
+                    "total": order.total,
+                    "error": "Payment amount verification failed.",
+                })
+
+            if paid_currency != "INR":
+                return render(request, "payment.html", {
+                    "order": order,
+                    "items": items,
+                    "total": order.total,
+                    "error": "Invalid payment currency.",
+                })
+
+            if payment_status not in ["authorized", "captured"]:
+                return render(request, "payment.html", {
+                    "order": order,
+                    "items": items,
+                    "total": order.total,
+                    "error": "Payment was not completed successfully.",
+                })
+
+            # --------------------------------------
+            # CONFIRM ONLINE ORDER + REDUCE STOCK
+            # --------------------------------------
+            try:
+                with transaction.atomic():
+                    locked_order = Order.objects.select_for_update().get(
+                        id=order.id,
+                        user=request.user
+                    )
+
+                    if locked_order.status == "Confirmed":
+                        return redirect("order_success", order_id=locked_order.id)
+
+                    locked_items = OrderItem.objects.filter(
+                        order=locked_order
+                    ).select_related("product")
+
+                    locked_products = []
+
+                    for item in locked_items:
+                        product = Product.objects.select_for_update().get(
+                            id=item.product.id
+                        )
+
+                        if product.stock < item.quantity:
+                            return render(request, "payment.html", {
+                                "order": locked_order,
+                                "items": locked_items,
+                                "total": locked_order.total,
+                                "error": (
+                                    f"Only {product.stock} unit(s) of "
+                                    f"{product.name} are available."
+                                ),
+                            })
+
+                        locked_products.append((product, item.quantity))
+
+                    for product, quantity in locked_products:
+                        product.stock -= quantity
+                        product.save(update_fields=["stock"])
+
+                    locked_order.payment_method = payment_method
+                    locked_order.razorpay_payment_id = razorpay_payment_id
+                    locked_order.razorpay_signature = razorpay_signature
+                    locked_order.status = "Confirmed"
+                    locked_order.save(update_fields=[
+                        "payment_method",
+                        "razorpay_payment_id",
+                        "razorpay_signature",
+                        "status",
+                    ])
+
+                Cart.objects.filter(user=request.user).delete()
+
+                return redirect("order_success", order_id=order.id)
+
+            except Exception:
+                return render(request, "payment.html", {
                     "order": order,
                     "items": items,
                     "total": order.total,
                     "error": (
-                        "Please select a valid "
-                        "payment method."
-                    )
-                }
-            )
+                        "Payment was verified, but order confirmation "
+                        "could not be completed. Please contact support."
+                    ),
+                })
 
         # ------------------------------------------
-        # CHECK STOCK AGAIN
+        # ONLINE PAYMENT: CREATE RAZORPAY ORDER
         # ------------------------------------------
+        if payment_method in ["UPI", "Debit / Credit Card"]:
 
-        for item in items:
-
-            if item.quantity > item.product.stock:
-
-                return render(
-                    request,
-                    "payment.html",
-                    {
+            for item in items:
+                if item.quantity > item.product.stock:
+                    return render(request, "payment.html", {
                         "order": order,
                         "items": items,
                         "total": order.total,
                         "error": (
-                            f"{item.product.name} "
-                            f"is out of stock."
-                        )
-                    }
+                            f"Only {item.product.stock} unit(s) of "
+                            f"{item.product.name} are available."
+                        ),
+                    })
+
+            if not settings.RAZORPAY_KEY_ID or not settings.RAZORPAY_KEY_SECRET:
+                return render(request, "payment.html", {
+                    "order": order,
+                    "items": items,
+                    "total": order.total,
+                    "error": (
+                        "Razorpay keys are not configured. "
+                        "Please add them to your environment variables."
+                    ),
+                })
+
+            try:
+                client = razorpay.Client(
+                    auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
                 )
 
-        # ------------------------------------------
-        # REDUCE STOCK
-        # ------------------------------------------
+                razorpay_order = client.order.create({
+                    "amount": int(order.total * 100),
+                    "currency": "INR",
+                    "receipt": f"debamart_order_{order.id}",
+                })
 
-        for item in items:
+                order.payment_method = payment_method
+                order.razorpay_order_id = razorpay_order["id"]
+                order.save(update_fields=[
+                    "payment_method",
+                    "razorpay_order_id",
+                ])
 
-            product = item.product
+                return render(request, "payment.html", {
+                    "order": order,
+                    "items": items,
+                    "total": order.total,
+                    "razorpay_key_id": settings.RAZORPAY_KEY_ID,
+                    "razorpay_order_id": razorpay_order["id"],
+                    "open_razorpay": True,
+                })
 
-            product.stock -= item.quantity
-
-            if product.stock < 0:
-
-                product.stock = 0
-
-            product.save()
-
-        # ------------------------------------------
-        # SAVE PAYMENT METHOD
-        # ------------------------------------------
-
-        order.payment_method = payment_method
-
-        # ------------------------------------------
-        # CONFIRM ORDER
-        # ------------------------------------------
-
-        order.status = "Confirmed"
-
-        order.save()
-
-        # ------------------------------------------
-        # CLEAR ONLY CURRENT USER'S CART
-        # ------------------------------------------
-
-        Cart.objects.filter(
-            user=request.user
-        ).delete()
+            except Exception:
+                return render(request, "payment.html", {
+                    "order": order,
+                    "items": items,
+                    "total": order.total,
+                    "error": "Unable to start online payment. Please try again.",
+                })
 
         # ------------------------------------------
-        # ORDER SUCCESS
+        # CASH ON DELIVERY
         # ------------------------------------------
+        try:
+            with transaction.atomic():
+                locked_order = Order.objects.select_for_update().get(
+                    id=order.id,
+                    user=request.user
+                )
 
-        return redirect(
-            "order_success",
-            order_id=order.id
-        )
+                if locked_order.status == "Confirmed":
+                    return redirect("order_success", order_id=locked_order.id)
 
-    return render(
-        request,
-        "payment.html",
-        {
-            "order": order,
-            "items": items,
-            "total": order.total
-        }
-    )
+                locked_items = OrderItem.objects.filter(
+                    order=locked_order
+                ).select_related("product")
+
+                locked_products = []
+
+                for item in locked_items:
+                    product = Product.objects.select_for_update().get(
+                        id=item.product.id
+                    )
+
+                    if product.stock < item.quantity:
+                        return render(request, "payment.html", {
+                            "order": locked_order,
+                            "items": locked_items,
+                            "total": locked_order.total,
+                            "error": (
+                                f"Only {product.stock} unit(s) of "
+                                f"{product.name} are available."
+                            ),
+                        })
+
+                    locked_products.append((product, item.quantity))
+
+                for product, quantity in locked_products:
+                    product.stock -= quantity
+                    product.save(update_fields=["stock"])
+
+                locked_order.payment_method = "Cash on Delivery"
+                locked_order.status = "Confirmed"
+                locked_order.save(update_fields=[
+                    "payment_method",
+                    "status",
+                ])
+
+            Cart.objects.filter(user=request.user).delete()
+
+            return redirect("order_success", order_id=order.id)
+
+        except Exception:
+            return render(request, "payment.html", {
+                "order": order,
+                "items": items,
+                "total": order.total,
+                "error": "Unable to confirm your order. Please try again.",
+            })
+
+    # ----------------------------------------------
+    # SHOW PAYMENT PAGE
+    # ----------------------------------------------
+    return render(request, "payment.html", {
+        "order": order,
+        "items": items,
+        "total": order.total,
+    })
 
 
 # ==================================================

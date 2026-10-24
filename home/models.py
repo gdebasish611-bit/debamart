@@ -2,55 +2,45 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-# =========================
+# ------------------------------------------
 # CONTACT
-# =========================
+# ------------------------------------------
 
 class Contact(models.Model):
 
-    Name = models.CharField(
-        max_length=100
-    )
+    Name = models.CharField(max_length=100)
 
     Email = models.EmailField()
 
-    Phone = models.CharField(
-        max_length=15
-    )
+    Phone = models.CharField(max_length=15)
 
     Message = models.TextField()
 
-    date = models.DateField(
-        auto_now_add=True
-    )
+    date = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return self.Name
 
 
-# =========================
+# ------------------------------------------
 # CATEGORY
-# =========================
+# ------------------------------------------
 
 class Category(models.Model):
 
-    name = models.CharField(
-        max_length=100
-    )
+    name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
 
-# =========================
+# ------------------------------------------
 # PRODUCT
-# =========================
+# ------------------------------------------
 
 class Product(models.Model):
 
-    name = models.CharField(
-        max_length=200
-    )
+    name = models.CharField(max_length=200)
 
     category = models.ForeignKey(
         Category,
@@ -82,13 +72,12 @@ class Product(models.Model):
         return self.name
 
 
-# =========================
+# ------------------------------------------
 # CART
-# =========================
+# ------------------------------------------
 
 class Cart(models.Model):
 
-    # USER SECURITY
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -113,13 +102,12 @@ class Cart(models.Model):
         return f"{self.user} - {self.product.name} - {self.quantity}"
 
 
-# =========================
+# ------------------------------------------
 # ORDER
-# =========================
+# ------------------------------------------
 
 class Order(models.Model):
 
-    # LOGGED-IN USER
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -150,26 +138,74 @@ class Order(models.Model):
         decimal_places=2
     )
 
-    # PAYMENT METHOD
     payment_method = models.CharField(
         max_length=30,
         choices=[
-            ("Cash on Delivery", "Cash on Delivery"),
-            ("UPI", "UPI"),
-            ("Debit / Credit Card", "Debit / Credit Card"),
+            (
+                "Cash on Delivery",
+                "Cash on Delivery"
+            ),
+            (
+                "UPI",
+                "UPI"
+            ),
+            (
+                "Debit / Credit Card",
+                "Debit / Credit Card"
+            ),
         ],
         default="Cash on Delivery"
     )
 
+    # --------------------------------------
+    # RAZORPAY PAYMENT DETAILS
+    # --------------------------------------
+
+    razorpay_order_id = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    razorpay_payment_id = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    razorpay_signature = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True
+    )
+
+    # --------------------------------------
     # ORDER STATUS
+    # --------------------------------------
+
     status = models.CharField(
         max_length=20,
         choices=[
-            ("Pending", "Pending"),
-            ("Confirmed", "Confirmed"),
-            ("Shipped", "Shipped"),
-            ("Delivered", "Delivered"),
-            ("Cancelled", "Cancelled"),
+            (
+                "Pending",
+                "Pending"
+            ),
+            (
+                "Confirmed",
+                "Confirmed"
+            ),
+            (
+                "Shipped",
+                "Shipped"
+            ),
+            (
+                "Delivered",
+                "Delivered"
+            ),
+            (
+                "Cancelled",
+                "Cancelled"
+            ),
         ],
         default="Pending"
     )
@@ -182,9 +218,9 @@ class Order(models.Model):
         return f"Order #{self.id} - {self.name}"
 
 
-# =========================
+# ------------------------------------------
 # ORDER ITEM
-# =========================
+# ------------------------------------------
 
 class OrderItem(models.Model):
 
@@ -212,9 +248,9 @@ class OrderItem(models.Model):
         return f"{self.product.name} x {self.quantity}"
 
 
-# =========================
-# USER PROFILE
-# =========================
+# ------------------------------------------
+# PROFILE
+# ------------------------------------------
 
 class Profile(models.Model):
 
@@ -233,9 +269,9 @@ class Profile(models.Model):
         return self.user.username
 
 
-# =========================
-# PRODUCT REVIEW
-# =========================
+# ------------------------------------------
+# REVIEW
+# ------------------------------------------
 
 class Review(models.Model):
 
@@ -264,9 +300,9 @@ class Review(models.Model):
         return f"{self.user.username} - {self.product.name}"
 
 
-# =========================
+# ------------------------------------------
 # OTP VERIFICATION
-# =========================
+# ------------------------------------------
 
 class OTPVerification(models.Model):
 
@@ -286,9 +322,9 @@ class OTPVerification(models.Model):
         return f"{self.mobile} - {self.otp}"
 
 
-# =========================
+# ------------------------------------------
 # WISHLIST
-# =========================
+# ------------------------------------------
 
 class Wishlist(models.Model):
 

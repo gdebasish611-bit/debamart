@@ -5,7 +5,6 @@
 {% block body %}
 
 <style>
-
     .payment-page {
         max-width: 900px;
         margin: 50px auto;
@@ -14,30 +13,53 @@
 
     .payment-title {
         text-align: center;
-        color: #16a34a;
         margin-bottom: 30px;
+        font-size: 32px;
+        font-weight: 700;
     }
 
-    .payment-box {
-        background: white;
+    .payment-card {
+        background: #ffffff;
         border-radius: 15px;
         padding: 30px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.10);
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
     }
 
-    .payment-box h2 {
-        margin-bottom: 20px;
-        color: #222;
+    .order-summary {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .order-summary h3 {
+        margin-bottom: 15px;
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 22px;
+        font-weight: 700;
+        padding-top: 15px;
+        border-top: 1px solid #ddd;
+    }
+
+    .payment-method-title {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 15px;
     }
 
     .payment-option {
         display: block;
-        border: 2px solid #ddd;
-        border-radius: 10px;
-        padding: 18px;
-        margin: 12px 0;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 12px;
         cursor: pointer;
-        transition: 0.3s;
+        transition: 0.2s;
     }
 
     .payment-option:hover {
@@ -49,83 +71,100 @@
         margin-right: 10px;
     }
 
-    .order-total {
-        margin-top: 25px;
-        padding: 18px;
-        background: #f0fdf4;
-        border-radius: 10px;
-        display: flex;
-        justify-content: space-between;
-        font-size: 20px;
-        font-weight: bold;
+    .payment-option strong {
+        font-size: 17px;
     }
 
-    .pay-btn {
+    .payment-option small {
+        display: block;
+        margin-left: 25px;
+        margin-top: 5px;
+        color: #666;
+    }
+
+    .payment-info {
+        display: none;
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 10px;
+        padding: 14px;
+        margin: 15px 0;
+        color: #1e40af;
+    }
+
+    .payment-button {
         width: 100%;
-        margin-top: 25px;
-        padding: 15px;
         border: none;
         border-radius: 10px;
+        padding: 15px;
         background: #16a34a;
         color: white;
         font-size: 18px;
-        font-weight: bold;
+        font-weight: 700;
         cursor: pointer;
+        margin-top: 10px;
+        transition: 0.2s;
     }
 
-    .pay-btn:hover {
+    .payment-button:hover {
         background: #15803d;
     }
 
-    .error-box {
-        background: #fee2e2;
+    .payment-button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    .secure-text {
+        text-align: center;
+        margin-top: 15px;
+        color: #666;
+        font-size: 14px;
+    }
+
+    .error-message {
+        background: #fef2f2;
         color: #b91c1c;
-        padding: 12px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-    }
-
-    .order-info {
-        background: #f8fafc;
+        border: 1px solid #fecaca;
         border-radius: 10px;
-        padding: 15px;
+        padding: 12px;
         margin-bottom: 20px;
+        display: none;
     }
 
-    .order-info p {
-        margin: 6px 0;
-        color: #444;
-    }
+    @media (max-width: 600px) {
+        .payment-page {
+            margin: 20px auto;
+            padding: 12px;
+        }
 
+        .payment-card {
+            padding: 20px;
+        }
+
+        .payment-title {
+            font-size: 26px;
+        }
+
+        .total-row {
+            font-size: 19px;
+        }
+    }
 </style>
-
 
 <div class="payment-page">
 
-    <h1 class="payment-title">
-        💳 Payment
-    </h1>
+    <h1 class="payment-title">💳 Payment</h1>
 
+    <div class="payment-card">
 
-    <div class="payment-box">
+        <!-- Error message -->
+        <div id="payment-error" class="error-message"></div>
 
-        <h2>
-            Select Payment Method
-        </h2>
+        <!-- Order Summary -->
+        <div class="order-summary">
 
-
-        {% if error %}
-
-        <div class="error-box">
-            {{ error }}
-        </div>
-
-        {% endif %}
-
-
-        <!-- ORDER INFORMATION -->
-
-        <div class="order-info">
+            <h3>🛒 Order Summary</h3>
 
             <p>
                 <strong>Order ID:</strong>
@@ -133,27 +172,27 @@
             </p>
 
             <p>
-                <strong>Customer:</strong>
+                <strong>Name:</strong>
                 {{ order.name }}
             </p>
 
-            <p>
-                <strong>City:</strong>
-                {{ order.city }}
-            </p>
+            <div class="total-row">
+                <span>Total Amount</span>
+                <span>₹{{ order.total }}</span>
+            </div>
 
         </div>
 
+        <!-- Payment Methods -->
+        <div class="payment-method-title">
+            Select Payment Method
+        </div>
 
-        <!-- PAYMENT FORM -->
-
-        <form method="POST">
+        <form method="POST" id="payment-form">
 
             {% csrf_token %}
 
-
-            <!-- CASH ON DELIVERY -->
-
+            <!-- COD -->
             <label class="payment-option">
 
                 <input
@@ -163,13 +202,15 @@
                     checked
                 >
 
-                💵 Cash on Delivery
+                <strong>💵 Cash on Delivery</strong>
+
+                <small>
+                    Pay when your order is delivered.
+                </small>
 
             </label>
 
-
             <!-- UPI -->
-
             <label class="payment-option">
 
                 <input
@@ -178,13 +219,15 @@
                     value="UPI"
                 >
 
-                📱 UPI
+                <strong>📱 UPI</strong>
+
+                <small>
+                    Pay securely using UPI through Razorpay.
+                </small>
 
             </label>
 
-
-            <!-- CARD -->
-
+            <!-- Card -->
             <label class="payment-option">
 
                 <input
@@ -193,42 +236,388 @@
                     value="Debit / Credit Card"
                 >
 
-                💳 Debit / Credit Card
+                <strong>💳 Debit / Credit Card</strong>
+
+                <small>
+                    Pay securely using Razorpay Checkout.
+                </small>
 
             </label>
 
+            <!-- Online Payment Information -->
+            <div id="online-payment-info" class="payment-info">
 
-            <!-- TOTAL -->
+                🔒 <strong>Secure Online Payment</strong>
 
-            <div class="order-total">
+                <br>
 
-                <span>
-                    Total Amount
-                </span>
-
-                <span>
-                    ₹{{ total }}
-                </span>
+                UPI and Card payments will open in the Razorpay
+                secure checkout window.
 
             </div>
 
-
-            <!-- PLACE ORDER -->
-
             <button
                 type="submit"
-                class="pay-btn"
+                id="payment-button"
+                class="payment-button"
             >
-
-                ✅ Place Order
-
+                Place Order - ₹{{ order.total }}
             </button>
 
         </form>
+
+        <div class="secure-text">
+            🔒 Your payment information is processed securely.
+        </div>
 
     </div>
 
 </div>
 
+<!-- Razorpay Checkout -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+
+    const paymentForm = document.getElementById("payment-form");
+    const paymentButton = document.getElementById("payment-button");
+    const onlinePaymentInfo = document.getElementById("online-payment-info");
+    const paymentError = document.getElementById("payment-error");
+
+    const paymentMethods =
+        document.querySelectorAll('input[name="payment_method"]');
+
+
+    /*
+     * Change button and information
+     * when payment method changes.
+     */
+
+    paymentMethods.forEach(function(method) {
+
+        method.addEventListener("change", function() {
+
+            paymentError.style.display = "none";
+
+            if (
+                this.value === "UPI" ||
+                this.value === "Debit / Credit Card"
+            ) {
+
+                onlinePaymentInfo.style.display = "block";
+
+                paymentButton.innerText =
+                    "Pay Securely - ₹{{ order.total }}";
+
+            } else {
+
+                onlinePaymentInfo.style.display = "none";
+
+                paymentButton.innerText =
+                    "Place Order - ₹{{ order.total }}";
+            }
+
+        });
+
+    });
+
+
+    /*
+     * Submit payment form.
+     */
+
+    paymentForm.addEventListener("submit", function(event) {
+
+        const selectedMethod =
+            document.querySelector(
+                'input[name="payment_method"]:checked'
+            );
+
+        if (!selectedMethod) {
+
+            event.preventDefault();
+
+            paymentError.innerText =
+                "Please select a payment method.";
+
+            paymentError.style.display = "block";
+
+            return;
+        }
+
+
+        /*
+         * COD
+         *
+         * Normal Django form submission.
+         */
+
+        if (selectedMethod.value === "Cash on Delivery") {
+
+            paymentButton.disabled = true;
+
+            paymentButton.innerText =
+                "Placing Order...";
+
+            return;
+        }
+
+
+        /*
+         * UPI / Card
+         *
+         * First request Django to create
+         * the Razorpay Order.
+         *
+         * Django will return the same page
+         * with open_razorpay = True.
+         */
+
+        {% if open_razorpay %}
+
+        event.preventDefault();
+
+        paymentButton.disabled = true;
+
+        paymentButton.innerText =
+            "Opening Secure Payment...";
+
+
+        /*
+         * Razorpay Checkout configuration
+         */
+
+        const options = {
+
+            key: "{{ razorpay_key_id }}",
+
+            amount: "{{ razorpay_amount }}",
+
+            currency: "INR",
+
+            name: "Debamart",
+
+            description:
+                "Payment for Debamart Order #{{ order.id }}",
+
+            order_id:
+                "{{ razorpay_order_id }}",
+
+            prefill: {
+
+                name:
+                    "{{ order.name|escapejs }}",
+
+                contact:
+                    "{{ order.phone|escapejs }}"
+
+            },
+
+            notes: {
+
+                order_id:
+                    "{{ order.id }}"
+
+            },
+
+            theme: {
+
+                color: "#16a34a"
+
+            },
+
+
+            /*
+             * Payment successful.
+             *
+             * Razorpay gives these values.
+             * We submit them to Django.
+             */
+
+            handler: function(response) {
+
+                /*
+                 * Add Razorpay response values
+                 * to Django form.
+                 */
+
+                let paymentId =
+                    document.getElementById(
+                        "razorpay_payment_id"
+                    );
+
+                let razorpayOrderId =
+                    document.getElementById(
+                        "razorpay_order_id"
+                    );
+
+                let signature =
+                    document.getElementById(
+                        "razorpay_signature"
+                    );
+
+
+                if (!paymentId) {
+
+                    paymentId =
+                        document.createElement("input");
+
+                    paymentId.type = "hidden";
+
+                    paymentId.name =
+                        "razorpay_payment_id";
+
+                    paymentId.id =
+                        "razorpay_payment_id";
+
+                    paymentForm.appendChild(paymentId);
+                }
+
+
+                if (!razorpayOrderId) {
+
+                    razorpayOrderId =
+                        document.createElement("input");
+
+                    razorpayOrderId.type = "hidden";
+
+                    razorpayOrderId.name =
+                        "razorpay_order_id";
+
+                    razorpayOrderId.id =
+                        "razorpay_order_id";
+
+                    paymentForm.appendChild(razorpayOrderId);
+                }
+
+
+                if (!signature) {
+
+                    signature =
+                        document.createElement("input");
+
+                    signature.type = "hidden";
+
+                    signature.name =
+                        "razorpay_signature";
+
+                    signature.id =
+                        "razorpay_signature";
+
+                    paymentForm.appendChild(signature);
+                }
+
+
+                paymentId.value =
+                    response.razorpay_payment_id;
+
+                razorpayOrderId.value =
+                    response.razorpay_order_id;
+
+                signature.value =
+                    response.razorpay_signature;
+
+
+                paymentButton.innerText =
+                    "Verifying Payment...";
+
+
+                /*
+                 * Submit to Django backend
+                 * for signature verification.
+                 */
+
+                paymentForm.submit();
+
+            },
+
+
+            /*
+             * If user closes Razorpay popup.
+             */
+
+            modal: {
+
+                ondismiss: function() {
+
+                    paymentButton.disabled = false;
+
+                    paymentButton.innerText =
+                        "Pay Securely - ₹{{ order.total }}";
+
+                }
+
+            }
+
+        };
+
+
+        /*
+         * Create Razorpay Checkout object.
+         */
+
+        const razorpay =
+            new Razorpay(options);
+
+
+        /*
+         * Handle Razorpay errors.
+         */
+
+        razorpay.on(
+            "payment.failed",
+            function(response) {
+
+                paymentButton.disabled = false;
+
+                paymentButton.innerText =
+                    "Pay Securely - ₹{{ order.total }}";
+
+                paymentError.innerText =
+                    "Payment failed. Please try again.";
+
+                paymentError.style.display = "block";
+
+                console.log(
+                    "Razorpay payment failed:",
+                    response.error
+                );
+
+            }
+        );
+
+
+        /*
+         * Open Razorpay popup.
+         */
+
+        razorpay.open();
+
+        {% else %}
+
+        /*
+         * First online-payment submission:
+         *
+         * Django creates Razorpay order.
+         */
+
+        if (
+            selectedMethod.value === "UPI" ||
+            selectedMethod.value === "Debit / Credit Card"
+        ) {
+
+            paymentButton.disabled = true;
+
+            paymentButton.innerText =
+                "Preparing Secure Payment...";
+
+        }
+
+        {% endif %}
+
+    });
+
+</script>
 
 {% endblock %}
+
