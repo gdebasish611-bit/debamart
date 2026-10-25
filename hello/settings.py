@@ -8,6 +8,7 @@ import os
 # Build paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 # Security
 SECRET_KEY = os.environ.get(
     "SECRET_KEY",
@@ -15,6 +16,7 @@ SECRET_KEY = os.environ.get(
 )
 
 DEBUG = os.environ.get("RENDER") != "true"
+
 
 # Allowed hosts
 ALLOWED_HOSTS = [
@@ -26,9 +28,11 @@ render_hostname = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if render_hostname:
     ALLOWED_HOSTS.append(render_hostname)
 
+
 # Razorpay settings
 RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID", "")
 RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET", "")
+
 
 # Applications
 INSTALLED_APPS = [
@@ -40,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+
 
 # Middleware
 MIDDLEWARE = [
@@ -53,8 +58,10 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+
 # URLs
 ROOT_URLCONF = "hello.urls"
+
 
 # Templates
 TEMPLATES = [
@@ -72,8 +79,10 @@ TEMPLATES = [
     },
 ]
 
+
 # WSGI
 WSGI_APPLICATION = "hello.wsgi.application"
+
 
 # Database
 DATABASES = {
@@ -82,6 +91,7 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -111,22 +121,30 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 # Internationalization
 LANGUAGE_CODE = "en-us"
+
 TIME_ZONE = "Asia/Kolkata"
+
 USE_I18N = True
+
 USE_TZ = True
 
-# Static files
+
+# Static files (CSS, JavaScript, icons)
 STATIC_URL = "/static/"
+
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATIC_DIR = BASE_DIR / "static"
+
 STATICFILES_DIRS = (
     [STATIC_DIR] if STATIC_DIR.is_dir() else []
 )
 
-# WhiteNoise storage
+
+# Storage configuration
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -138,9 +156,12 @@ STORAGES = {
     },
 }
 
-# Media files
+
+# Media files (product images uploaded through Django Admin)
 MEDIA_URL = "/media/"
+
 MEDIA_ROOT = BASE_DIR / "media"
+
 
 # Default primary key
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
